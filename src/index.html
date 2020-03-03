@@ -1,91 +1,91 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="">
-		<meta name="author" content="">
-		<!--<link rel="icon" href="/favicon.png">-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--<link rel="icon" href="/favicon.png">-->
 
-		<title>
-			TODO TITLE
-		</title>
+    <title>
+      TODO TITLE
+    </title>
 
-		<link href="style/dashboard.css" rel="stylesheet">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="style/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-		<!-- Vue.js (dev) -->
-		<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-		<!-- Vue.js (prod) -->
-		<!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
-		<!-- jQuery (for Bootstrap) -->
-		<script defer src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<!-- Popper.js (for Bootstrap) -->
-		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<!-- Bootstrap -->
-		<script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-		<script>
-			let mapOptions = {
-				center: {lat: 63.419499, lng: 10.402077},
-				zoom: 10,
-				// roadmap, satellite, hybrid or terrain
-				mapTypeId: "terrain",
-			};
-		</script>
-		<script defer src="scripts/main.js"></script>
-		<script defer src="scripts/dashboard.js"></script>
-		<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGPGN2FTHaZYK9Oxf835xXA9XGiumXBxc&callback=initMap"></script>
-	</head>
+    <!-- Vue.js (dev) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Vue.js (prod) -->
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+    <!-- jQuery (for Bootstrap) -->
+    <script defer src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <!-- Popper.js (for Bootstrap) -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
+    <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+      let mapOptions = {
+        center: {lat: 63.419499, lng: 10.402077},
+        zoom: 10,
+        // roadmap, satellite, hybrid or terrain
+        mapTypeId: "terrain",
+      };
+    </script>
+    <script defer src="scripts/main.js"></script>
+    <script defer src="scripts/dashboard.js"></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGPGN2FTHaZYK9Oxf835xXA9XGiumXBxc&callback=initMap"></script>
+  </head>
 
-	<body>
-		<div id="app">
-			<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-				<a class="navbar-brand col-sm-3 col-md-2 mr-0" :href="siteRootUrl">{{ siteTitle }}</a>
-				<ul class="navbar-nav px-3">
-					<li class="nav-item text-nowrap">
-						<a class="nav-link" :href="apiRootUrl">API</a>
-					</li>
-				</ul>
-			</nav>
+  <body>
+    <div id="app">
+      <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" :href="siteRootUrl">{{ siteTitle }}</a>
+        <ul class="navbar-nav px-3">
+          <li class="nav-item text-nowrap">
+            <a class="nav-link" :href="apiRootUrl">API</a>
+          </li>
+        </ul>
+      </nav>
 
-			<div class="container-fluid">
-				<div class="row">
-					<nav class="col-md-3 d-none d-md-block bg-light sidebar">
-						<div class="sidebar-sticky">
-							<div class="overview-container">
-								<ul class="nav flex-column">
-									<li class="overview-status nav-item">
-										<span class="text-muted">Status:</span>
-										<strong>
-											<span v-if="overviewAllOkay" v-cloak class="good">Good</span>
-											<span v-else v-cloak class="bad">Problem</span>
-										</strong>
-									</li>
-								</ul>
-							</div>
-							<div class="device-list-container">
-								<h6 class="nav-heading d-flex">Devices</h6>
-								<ul class="nav flex-column">
-									<li v-for="device in devices" :key="device.uuid" class="device-list-device nav-item">
-										<a class="nav-link" href="#">
-											<span class="device-name">{{ device.name }}</span>
-											<span class="device-status float-right text-muted">pH 0</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</nav>
-					<main role="main" class="main-container col-md-9 ml-sm-auto">
-						<div class="map-container d-flex">
-							<div id="map"></div>
-						</div>
-						<div v-if="activeDeviceUuid" class="details-container d-flex">
-							TODO DETAILS
-						</div>
-					</main>
-				</div>
-			</div>
-		</div>
-	</body>
+      <div class="container-fluid">
+        <div class="row">
+          <nav class="col-md-3 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+              <div class="overview-container">
+                <ul class="nav flex-column">
+                  <li class="overview-status nav-item">
+                    <span class="text-muted">Status:</span>
+                    <strong>
+                      <span v-if="overviewAllOkay" v-cloak class="good">Good</span>
+                      <span v-else v-cloak class="bad">Problem</span>
+                    </strong>
+                  </li>
+                </ul>
+              </div>
+              <div class="device-list-container">
+                <h6 class="nav-heading d-flex">Devices</h6>
+                <ul class="nav flex-column">
+                  <li v-for="device in devices" :key="device.uuid" class="device-list-device nav-item">
+                    <a class="nav-link" href="#">
+                      <span class="device-name">{{ device.name }}</span>
+                      <span class="device-status float-right text-muted">pH 0</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          <main role="main" class="main-container col-md-9 ml-sm-auto">
+            <div class="map-container d-flex">
+              <div id="map"></div>
+            </div>
+            <div v-if="activeDeviceUuid" class="details-container d-flex">
+              TODO DETAILS
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
