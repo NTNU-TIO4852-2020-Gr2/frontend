@@ -1,8 +1,3 @@
-/*
- * TODO
- * Load Vue and Maps dynamically, based on debug and key.
- */
-
 let app = new Vue({
   el: "#app",
   data: {
@@ -13,8 +8,8 @@ let app = new Vue({
     backendRootUrlFriendly: config.backendRootUrlFriendly,
 
     // State
-    overviewAllOkay: true,
-    activeDeviceUuid: "",
+    map: null,
+    activeDeviceUuid: null,
     devices: [
       {
         uuid: "1",
@@ -38,5 +33,35 @@ let app = new Vue({
         longitude: 0,
       },
     ],
-  }
+  },
+  computed: {
+    deviceAlertCount: function() {
+      // TODO
+      return 0;
+    },
+  },
+  watch: {
+    devices: function () {
+      try {
+        window["updateMapDevices"]();
+      } catch (err) {
+        // Ignored
+      }
+    },
+  },
+  methods: {
+    openDetails: function(device) {
+      if (typeof device === "object")
+        app.activeDeviceUuid = device.uuid;
+      else
+        app.activeDeviceUuid = device;
+      // Exit fullscreen
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    },
+    closeDetails: function() {
+      app.activeDeviceUuid = null;
+    },
+  },
 });

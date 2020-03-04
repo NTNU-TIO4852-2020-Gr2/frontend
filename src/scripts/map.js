@@ -1,18 +1,18 @@
-let map = null;
-
+// Initialize map after Google Maps is loaded
 function initMap() {
   console.log("Initializing map ...");
 
-  // mapOptions is defined in the HTML doc
-  if (mapOptions == null) {
-    console.error("Map options not set, map will not be loaded.")
-    return;
-  }
-
-  map = new google.maps.Map(document.getElementById('map'), mapOptions);
+  let mapOptions = {
+    center: {lat: config.googleMapsLatitude, lng: config.googleMapsLongitude},
+    zoom: config.googleMapsZoom,
+    mapTypeId: config.googleMapsType,
+  };
+  app.map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
   updateMapDevices();
 }
+
+google.maps.event.addDomListener(window, 'load', initMap);
 
 // Update map markers for the devices
 function updateMapDevices() {
@@ -20,22 +20,26 @@ function updateMapDevices() {
   if (map == null)
     return;
 
-  console.log("Updating devices on map ...");
+  // TODO update for all devices and remove old
+
+  // Marker
   let markerProps = {
-    map: map,
+    map: app.map,
     position: {lat: 63.419499, lng: 10.402077},
     //label: "A",
     deviceName: "Alpha",
-    deviceId: 1,
+    deviceUuid: 1,
   };
   let marker = new google.maps.Marker(markerProps);
+
+  // Info window
   let infowindow =  new google.maps.InfoWindow({
     content: markerProps.deviceName,
-    map: map
+    map: app.map
   });
   marker.addListener('click', onClickMapMarker);
   marker.addListener('mouseover', function() {
-    infowindow.open(map, this);
+    infowindow.open(app.map, this);
   });
   marker.addListener('mouseout', function() {
     infowindow.close();
@@ -43,7 +47,5 @@ function updateMapDevices() {
 }
 
 function onClickMapMarker() {
-  console.log(this.deviceName)
+  app.openDetails(this.deviceUuid);
 }
-
-google.maps.event.addDomListener(window, 'load', initMap);

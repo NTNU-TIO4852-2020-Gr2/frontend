@@ -29,4 +29,4 @@ addScript("Google Maps", "https://maps.googleapis.com/maps/api/js?key=" + config
 
 // App
 addScript("App", "scripts/app.js");
-addScript("Dashboard", "scripts/dashboard.js");
+addScript("Map", "scripts/map.js");

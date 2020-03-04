@@ -7,11 +7,9 @@
     <meta name="author" content="">
     <!--<link rel="icon" href="/favicon.png">-->
 
-    <title>
-      TODO TITLE
-    </title>
+    <title></title>
 
-    <link href="style/dashboard.css" rel="stylesheet">
+    <link href="style/main.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
@@ -36,8 +34,8 @@
                   <li class="overview-status nav-item">
                     <span class="text-muted">Status:</span>
                     <strong>
-                      <span v-if="overviewAllOkay" v-cloak class="good">Good</span>
-                      <span v-else v-cloak class="bad">Problem</span>
+                      <span v-if="deviceAlertCount == 0" v-cloak class="good">Good</span>
+                      <span v-else v-cloak class="bad">{{ deviceAlertCount }} alerts</span>
                     </strong>
                   </li>
                 </ul>
@@ -46,7 +44,7 @@
                 <h6 class="nav-heading d-flex">Devices</h6>
                 <ul class="nav flex-column">
                   <li v-for="device in devices" :key="device.uuid" class="device-list-device nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="#" @click.prevent="openDetails(device)">
                       <span class="device-name">{{ device.name }}</span>
                       <span class="device-status float-right text-muted">pH 0</span>
                     </a>
@@ -56,11 +54,13 @@
             </div>
           </nav>
           <main role="main" class="main-container col-md-9 ml-sm-auto">
-            <div class="map-container d-flex">
+            <div class="map-container">
               <div id="map"></div>
             </div>
-            <div v-if="activeDeviceUuid" class="details-container d-flex">
-              TODO DETAILS
+            <div v-if="activeDeviceUuid" class="details-container">
+              <button class="close-button btn btn-light float-right" @click.prevent="closeDetails" title="Close">X</button>
+              <h1>TODO DETAILS</h1>
+              <p>Active UUID: {{ activeDeviceUuid }}</p>
             </div>
           </main>
         </div>

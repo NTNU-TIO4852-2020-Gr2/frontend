@@ -12,9 +12,9 @@ const config = {
 
     // Google Maps
     googleMapsApiKey: "",
-    googleMapsLatitude: "63.419499",
-    googleMapsLongitude: "10.402077",
-    googleMapsZoom: "10",
+    googleMapsLatitude: 63.419499,
+    googleMapsLongitude: 10.402077,
+    googleMapsZoom: 10,
     // roadmap, satellite, hybrid or terrain
     googleMapsType: "terrain",
 };

@@ -137,11 +137,10 @@ body {
 
 .details-container {
 	z-index: 1;
+	background-color: #eee;
 }
 
-.details-container.hidden {
-	visibility: hidden;
-}
+.details-container .close-button {}
 
 /*
  * Utilities
