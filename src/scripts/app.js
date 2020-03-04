@@ -41,12 +41,6 @@ let app = new Vue({
       return 0;
     },
   },
-  watch: {
-    // FIXME watch array elements too, not just the array itself
-    devices: function () {
-      window["updateMapDevices"]();
-    },
-  },
   methods: {
     openDetails: function(device) {
       if (typeof device === "object")
@@ -61,5 +55,8 @@ let app = new Vue({
     closeDetails: function() {
       app.activeDeviceUuid = null;
     },
+    postUpdateDevices: function() {
+      window["updateMapDevices"]();
+    }
   },
 });

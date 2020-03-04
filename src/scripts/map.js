@@ -16,15 +16,13 @@ google.maps.event.addDomListener(window, 'load', initMap);
 
 // Update map markers for all devices
 function updateMapDevices() {
-  console.log("UPDATE DEVICES!")
-
   if (map == null)
     return;
 
   // Remove old markers
-  // TODO test
   Object.keys(app.mapMarkers).slice().forEach(uuid => {
-    if (!uuid in app.devices)
+    if (!(uuid in app.devices))
+      app.mapMarkers[uuid].setMap(null);
       delete app.mapMarkers[uuid];
   });
 
@@ -49,7 +47,6 @@ function updateMapDevice(deviceUuid) {
   };
 
   if (!marker) {
-    console.log("NEW");
     // Marker
     marker = new google.maps.Marker(markerProps);
     app.mapMarkers[deviceUuid] = marker;
@@ -69,7 +66,6 @@ function updateMapDevice(deviceUuid) {
       infowindow.close();
     });
   } else {
-    console.log("OLD!");
     marker.position = markerProps.position;
     marker.deviceName = markerProps.deviceName;
   }
