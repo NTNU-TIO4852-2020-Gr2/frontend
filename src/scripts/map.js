@@ -14,38 +14,63 @@ function initMap() {
 
 google.maps.event.addDomListener(window, 'load', initMap);
 
-// Update map markers for the devices
+// Update map markers for all devices
 function updateMapDevices() {
-  // Map not ready yet
+  console.log("UPDATE DEVICES!")
+
   if (map == null)
     return;
 
-  // TODO update for all devices and remove old
+  // Remove old markers
+  // TODO test
+  Object.keys(app.mapMarkers).slice().forEach(uuid => {
+    if (!uuid in app.devices)
+      delete app.mapMarkers[uuid];
+  });
 
-  // Marker
-  let markerProps = {
-    map: app.map,
-    position: {lat: 63.419499, lng: 10.402077},
-    //label: "A",
-    deviceName: "Alpha",
-    deviceUuid: 1,
-  };
-  let marker = new google.maps.Marker(markerProps);
-
-  // Info window
-  let infowindow =  new google.maps.InfoWindow({
-    content: markerProps.deviceName,
-    map: app.map
-  });
-  marker.addListener('click', onClickMapMarker);
-  marker.addListener('mouseover', function() {
-    infowindow.open(app.map, this);
-  });
-  marker.addListener('mouseout', function() {
-    infowindow.close();
-  });
+  // Add and update existing markers
+  Object.keys(app.devices).forEach(uuid => updateMapDevice(uuid));
 }
 
-function onClickMapMarker() {
-  app.openDetails(this.deviceUuid);
+// Update map marker for a particular device
+function updateMapDevice(deviceUuid) {
+  if (map == null)
+    return;
+
+  let device = app.devices[deviceUuid];
+  let marker = app.mapMarkers[deviceUuid]; // Nullable
+
+  let markerProps = {
+    map: app.map,
+    position: {lat: device.latitude, lng: device.longitude},
+    //label: "A",
+    deviceName: device.name,
+    deviceUuid: device.uuid,
+  };
+
+  if (!marker) {
+    console.log("NEW");
+    // Marker
+    marker = new google.maps.Marker(markerProps);
+    app.mapMarkers[deviceUuid] = marker;
+
+    // Info window
+    let infowindow =  new google.maps.InfoWindow({
+      content: markerProps.deviceName,
+      map: app.map
+    });
+    marker.addListener('click', function () {
+      app.openDetails(this.deviceUuid);
+    });
+    marker.addListener('mouseover', function() {
+      infowindow.open(app.map, this);
+    });
+    marker.addListener('mouseout', function() {
+      infowindow.close();
+    });
+  } else {
+    console.log("OLD!");
+    marker.position = markerProps.position;
+    marker.deviceName = markerProps.deviceName;
+  }
 }

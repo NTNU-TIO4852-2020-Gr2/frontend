@@ -8,31 +8,32 @@ let app = new Vue({
     backendRootUrlFriendly: config.backendRootUrlFriendly,
 
     // State
-    map: null,
     activeDeviceUuid: null,
-    devices: [
-      {
+    devices: {
+      "1": {
         uuid: "1",
         name: "First",
         timeCreated: 0,
-        latitude: 0,
-        longitude: 0,
+        latitude: 63.419499,
+        longitude: 10.402077,
       },
-      {
+      "2": {
         uuid: "2",
         name: "Second",
         timeCreated: 0,
-        latitude: 0,
-        longitude: 0,
+        latitude: 63.419499,
+        longitude: 10.412077,
       },
-      {
+      "3": {
         uuid: "3",
         name: "Third",
         timeCreated: 0,
-        latitude: 0,
-        longitude: 0,
+        latitude: 63.429499,
+        longitude: 10.402077,
       },
-    ],
+    },
+    map: null,
+    mapMarkers: {},
   },
   computed: {
     deviceAlertCount: function() {
@@ -41,12 +42,9 @@ let app = new Vue({
     },
   },
   watch: {
+    // FIXME watch array elements too, not just the array itself
     devices: function () {
-      try {
-        window["updateMapDevices"]();
-      } catch (err) {
-        // Ignored
-      }
+      window["updateMapDevices"]();
     },
   },
   methods: {
