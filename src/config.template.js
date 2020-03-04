@@ -1,14 +1,14 @@
 // Configuration template for EiT front-end
 // Copy this file to config.js and add config options there.
 
-window.app.config = {
+const config = {
     debug: false,
     siteName: "PH20",
     rootUrl: "./",
 
     // Backend
-    backendRootUrl: "http://localhost:9000",
-    backendRootUrlFriendly: backendRootUrl,
+    backendRootUrl: "http://localhost:9001",
+    backendRootUrlFriendly: "http://localhost:9001",
 
     // Google Maps
     googleMapsApiKey: "",

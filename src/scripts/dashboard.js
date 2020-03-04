@@ -45,3 +45,5 @@ function updateMapDevices() {
 function onClickMapMarker() {
   console.log(this.deviceName)
 }
+
+google.maps.event.addDomListener(window, 'load', initMap);

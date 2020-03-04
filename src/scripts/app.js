@@ -1,8 +1,3 @@
-const config = window.app.config;
-
-// Update page title
-document.title = config.siteName;
-
 /*
  * TODO
  * Load Vue and Maps dynamically, based on debug and key.
