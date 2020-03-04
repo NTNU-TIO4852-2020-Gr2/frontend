@@ -1,3 +1,5 @@
+// Requires config and app
+
 // Initialize map after Google Maps is loaded
 function initMap() {
   console.log("Initializing map ...");
@@ -21,9 +23,11 @@ function updateMapDevices() {
 
   // Remove old markers
   Object.keys(app.mapMarkers).slice().forEach(uuid => {
-    if (!(uuid in app.devices))
+    if (!(uuid in app.devices)) {
       app.mapMarkers[uuid].setMap(null);
       delete app.mapMarkers[uuid];
+      return;
+    }
   });
 
   // Add and update existing markers
@@ -36,7 +40,8 @@ function updateMapDevice(deviceUuid) {
     return;
 
   let device = app.devices[deviceUuid];
-  let marker = app.mapMarkers[deviceUuid]; // Nullable
+  let marker = app.mapMarkers[deviceUuid]; // 
+  let isPosValid = typeof device.latitude == "number" && typeof device.longitude == "number";
 
   let markerProps = {
     map: app.map,
@@ -47,11 +52,15 @@ function updateMapDevice(deviceUuid) {
   };
 
   if (!marker) {
-    // Marker
+    // Skip if no position
+    if (!isPosValid)
+      return;
+
+    // Create marker
     marker = new google.maps.Marker(markerProps);
     app.mapMarkers[deviceUuid] = marker;
 
-    // Info window
+    // Create info window
     let infowindow =  new google.maps.InfoWindow({
       content: markerProps.deviceName,
       map: app.map
@@ -66,6 +75,12 @@ function updateMapDevice(deviceUuid) {
       infowindow.close();
     });
   } else {
+    // Remove if no position
+    if (!isPosValid) {
+      marker.setMap(null);
+      delete app.mapMarkers[deviceUuid];
+    }
+
     marker.position = markerProps.position;
     marker.deviceName = markerProps.deviceName;
   }

@@ -7,8 +7,10 @@ const config = {
     rootUrl: "./",
 
     // Backend
-    backendRootUrl: "http://localhost:9001",
-    backendRootUrlFriendly: "http://localhost:9001",
+    backendRootUrl: "http://localhost:9001/v0/",
+    backendRootUrlFriendly: "http://localhost:9001/",
+    backendDevicesEndpoint: "devices",
+    backendMeasurementsEndpoint: "measurements",
 
     // Google Maps
     googleMapsApiKey: "",

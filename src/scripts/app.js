@@ -1,3 +1,5 @@
+// Requires config
+
 let app = new Vue({
   el: "#app",
   data: {
@@ -8,30 +10,8 @@ let app = new Vue({
     backendRootUrlFriendly: config.backendRootUrlFriendly,
 
     // State
-    activeDeviceUuid: null,
-    devices: {
-      "1": {
-        uuid: "1",
-        name: "First",
-        timeCreated: 0,
-        latitude: 63.419499,
-        longitude: 10.402077,
-      },
-      "2": {
-        uuid: "2",
-        name: "Second",
-        timeCreated: 0,
-        latitude: 63.419499,
-        longitude: 10.412077,
-      },
-      "3": {
-        uuid: "3",
-        name: "Third",
-        timeCreated: 0,
-        latitude: 63.429499,
-        longitude: 10.402077,
-      },
-    },
+    activeDevice: null,
+    devices: {},
     map: null,
     mapMarkers: {},
   },
@@ -43,17 +23,19 @@ let app = new Vue({
   },
   methods: {
     openDetails: function(device) {
+      let uuid = null;
       if (typeof device === "object")
-        app.activeDeviceUuid = device.uuid;
+        uuid = device.uuid;
       else
-        app.activeDeviceUuid = device;
+        uuid = device;
+      app.activeDevice = app.devices[uuid];
       // Exit fullscreen
       if (document.fullscreenElement) {
         document.exitFullscreen();
       }
     },
     closeDetails: function() {
-      app.activeDeviceUuid = null;
+      app.activeDevice = null;
     },
     postUpdateDevices: function() {
       window["updateMapDevices"]();

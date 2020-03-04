@@ -40,13 +40,14 @@
                   </li>
                 </ul>
               </div>
-              <div class="device-list-container">
+              <div class="device-list-container overflow-auto">
                 <h6 class="nav-heading d-flex">Devices</h6>
                 <ul class="nav flex-column">
-                  <li v-for="device in devices" :key="device.uuid" class="device-list-device nav-item">
+                  <li v-for="device in devices" :key="device.uuid" v-cloak class="device-list-device nav-item">
                     <a class="nav-link" href="#" @click.prevent="openDetails(device)">
-                      <span class="device-name">{{ device.name }}</span>
-                      <span class="device-status float-right text-muted">pH 0</span>
+                      <span v-if="device.name" class="device-name">{{ device.name }}</span>
+                      <span v-else class="device-name">{{ device.uuid }}</span>
+                      <span class="device-status float-right text-muted">pH 0, 0&#176;C</span>
                     </a>
                   </li>
                 </ul>
@@ -57,10 +58,19 @@
             <div class="map-container">
               <div id="map"></div>
             </div>
-            <div v-if="activeDeviceUuid" class="details-container">
+            <div v-if="activeDevice" class="details-container overflow-auto">
               <button class="close-button btn btn-light float-right" @click.prevent="closeDetails" title="Close">X</button>
-              <h1>TODO DETAILS</h1>
-              <p>Active UUID: {{ activeDeviceUuid }}</p>
+              <p><strong>WIP</strong></p>
+              <h1 v-if="activeDevice.name" v-cloak>{{ activeDevice.name }}</h1>
+              <h1 v-else v-cloak>{{ activeDevice.uuid }}</h1>
+              <p>UUID: <code>{{ activeDevice.uuid }}</code></p>
+              <p>Measurement count: {{ measurements[activeDevice.uuid].length }}</p>
+              <h2>Measurements:</h2>
+              <ul>
+                <li v-for="measurement in measurements[activeDevice.uuid]" :key="measurement.id" v-cloak>
+                  {{ measurement }}
+                </li>
+              </ul>
             </div>
           </main>
         </div>
