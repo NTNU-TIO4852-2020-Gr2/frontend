@@ -5,6 +5,7 @@
 ### Tools
 
 * [Git](https://git-scm.com) or [GitHub for Windows](https://windows.github.com/)
+* Browsersync (optional)
 * Docker and Docker Compose (optional)
 * Travis Tool (optional)
 
@@ -18,6 +19,10 @@ git config --global user.email <email-address>
 ```
 
 Alternatively, on Windows, use the GitHub for Windows app to setup everything
+
+### (Optional) Installing Browsersync
+
+`npm install -g browser-sync`
 
 ### (Optional) Installing and Configuring Docker
 
@@ -34,7 +39,8 @@ sudo gem install travis
 
 ## Running
 
-TODO
+- Option A: Open `src/index.html` directly.
+- Option B: Run `manage/run.sh` which starts a dev server with hot reloading (requires Browsersync).
 
 ### Run with Docker
 

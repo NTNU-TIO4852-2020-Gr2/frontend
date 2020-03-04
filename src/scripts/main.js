@@ -1,9 +1,23 @@
+const config = window.app.config;
+
+// Update page title
+document.title = config.siteName;
+
+/*
+ * TODO
+ * Load Vue and Maps dynamically, based on debug and key.
+ */
+
 let app = new Vue({
   el: "#app",
   data: {
-    siteTitle: "PH2O",
-    siteRootUrl: "./",
-    apiRootUrl: "./",
+    // Config
+    siteTitle: config.siteName,
+    siteRootUrl: config.rootUrl,
+    backendRootUrl: config.backendRootUrl,
+    backendRootUrlFriendly: config.backendRootUrlFriendly,
+
+    // State
     overviewAllOkay: true,
     activeDeviceUuid: "",
     devices: [

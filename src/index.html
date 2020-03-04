@@ -12,29 +12,8 @@
     </title>
 
     <link href="style/dashboard.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <!-- Vue.js (dev) -->
-    <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <!-- Vue.js (prod) -->
-    <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
-    <!-- jQuery (for Bootstrap) -->
-    <script defer src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <!-- Popper.js (for Bootstrap) -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <!-- Bootstrap -->
-    <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script>
-      let mapOptions = {
-        center: {lat: 63.419499, lng: 10.402077},
-        zoom: 10,
-        // roadmap, satellite, hybrid or terrain
-        mapTypeId: "terrain",
-      };
-    </script>
-    <script defer src="scripts/main.js"></script>
-    <script defer src="scripts/dashboard.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGPGN2FTHaZYK9Oxf835xXA9XGiumXBxc&callback=initMap"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
 
   <body>
@@ -43,7 +22,7 @@
         <a class="navbar-brand col-sm-3 col-md-2 mr-0" :href="siteRootUrl">{{ siteTitle }}</a>
         <ul class="navbar-nav px-3">
           <li class="nav-item text-nowrap">
-            <a class="nav-link" :href="apiRootUrl">API</a>
+            <a class="nav-link" :href="backendRootUrlFriendly">API</a>
           </li>
         </ul>
       </nav>
@@ -86,6 +65,24 @@
           </main>
         </div>
       </div>
+    </div>
+
+    <div id="scripts">
+      <!-- Vue.js (dev) -->
+      <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <!-- Vue.js (prod) -->
+      <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+      <!-- jQuery (for Bootstrap) -->
+      <script defer src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <!-- Popper.js (for Bootstrap) -->
+      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <!-- Bootstrap -->
+      <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <!-- Application stuff -->
+      <script defer src="config.js"></script>
+      <script defer src="scripts/main.js"></script>
+      <script defer src="scripts/dashboard.js"></script>
+      <!--<script defer src="https://maps.googleapis.com/maps/api/js?key=INSERT_KEY_HERE&callback=initMap"></script>-->
     </div>
   </body>
 </html>
