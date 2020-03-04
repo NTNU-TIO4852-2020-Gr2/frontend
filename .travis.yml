@@ -38,6 +38,6 @@ jobs:
       name: Deploy to server
       if: branch = master AND type = push
       install:
-      - openssl aes-256-cbc -K $encrypted__key -iv $encrypted__iv -in keys/ssh_deploy.key.enc -out keys/ssh_deploy.key -d
+      - openssl aes-256-cbc -K $encrypted_7e234f378aeb_key -iv $encrypted_7e234f378aeb_iv -in keys/ssh_deploy.key.enc -out keys/ssh_deploy.key -d
       - chmod 600 keys/ssh_deploy.key
       script: ssh -oStrictHostKeyChecking=no -i keys/ssh_deploy.key ${SSH_USER}@${SSH_HOST}
