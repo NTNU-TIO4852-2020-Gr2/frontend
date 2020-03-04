@@ -61,16 +61,24 @@
             <div v-if="activeDevice" class="details-container overflow-auto">
               <button class="close-button btn btn-light float-right" @click.prevent="closeDetails" title="Close">X</button>
               <p><strong>WIP</strong></p>
-              <h1 v-if="activeDevice.name" v-cloak>{{ activeDevice.name }}</h1>
-              <h1 v-else v-cloak>{{ activeDevice.uuid }}</h1>
-              <p>UUID: <code>{{ activeDevice.uuid }}</code></p>
-              <p>Measurement count: {{ measurements[activeDevice.uuid].length }}</p>
-              <h2>Measurements:</h2>
-              <ul>
+              <h1 v-cloak>{{ activeDevice.name ? activeDevice.name : "Nameless Device" }}</h1>
+              <table>
+                <tr>
+                  <td>UUID</td>
+                  <td><code>{{ activeDevice.uuid }}</code></td>
+                </tr>
+                <tr>
+                  <td>Measurements</td>
+                  <td>{{ activeDevice.measurementCount }}</td>
+                </tr>
+              </table>
+              <h2>Measurements</h2>
+              <ul v-if="activeDevice.uuid in measurements">
                 <li v-for="measurement in measurements[activeDevice.uuid]" :key="measurement.id" v-cloak>
                   {{ measurement }}
                 </li>
               </ul>
+              <p v-else>None.</p>
             </div>
           </main>
         </div>

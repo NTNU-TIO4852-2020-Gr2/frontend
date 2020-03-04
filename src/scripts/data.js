@@ -23,9 +23,8 @@ function parseDeviceData(data) {
         device["longitude"] = rawDevice["longitude"];
         device["latitude"] = rawDevice["latitude"];
         device["timeCreated"] = rawDevice["time_created"];
+        device["measurementCount"] = rawDevice["measurement_count"];
         devices[uuid] = device;
-        if (config.debug)
-            console.log("Loaded device: " + device.uuid + " / " + device.name);
     }
     if (config.debug)
         console.log("Loaded " + Object.keys(devices).length + " devices.");
