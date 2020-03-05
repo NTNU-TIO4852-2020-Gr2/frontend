@@ -12,6 +12,7 @@ let app = new Vue({
     // State
     activeDevice: null,
     devices: {},
+    measurements: {},
     map: null,
     mapMarkers: {},
   },
