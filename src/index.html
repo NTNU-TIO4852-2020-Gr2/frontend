@@ -34,8 +34,9 @@
                 <ul class="nav flex-column">
                   <li class="overview-status nav-item">
                     <span class="text-muted">Status:</span>
-                      <span v-if="deviceAlertCount == 0" v-cloak class="good"><strong>Good</strong></span>
-                      <span v-else v-cloak class="bad"><strong>{{ deviceAlertCount }} alerts</strong></span>
+                    <span v-if="deviceAlertCount == 0" v-cloak class="good"><strong>Good</strong></span>
+                    <span v-else-if="deviceAlertCount < 0" v-cloak class="unknown"><strong>Unknown</strong></span>
+                    <span v-else v-cloak class="bad"><strong>{{ deviceAlertCount }} alerts</strong></span>
                   </li>
                 </ul>
               </div>

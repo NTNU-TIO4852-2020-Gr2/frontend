@@ -25,7 +25,7 @@ let app = new Vue({
   computed: {
     deviceAlertCount: function() {
       // TODO
-      return 0;
+      return -1;
     },
   },
   methods: {

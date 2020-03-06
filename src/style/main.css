@@ -66,6 +66,10 @@ body {
 	color: red;
 }
 
+.overview-status .unknown {
+	color: orange;
+}
+
 .device-list-container .spinner-container {
 	margin: 2em 0;
 	text-align: center;
