@@ -10,17 +10,17 @@
     <title></title>
 
     <link href="style/main.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   </head>
 
   <body>
     <div id="app">
       <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" :href="siteRootUrl">{{ siteTitle }}</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" v-cloak :href="siteRootUrl">{{ siteTitle }}</a>
         <ul class="navbar-nav px-3">
           <li class="nav-item text-nowrap">
-            <a class="nav-link" :href="backendRootUrlFriendly">API</a>
+            <a class="nav-link" v-cloak :href="backendRootUrlFriendly">API</a>
           </li>
         </ul>
       </nav>
@@ -34,16 +34,14 @@
                 <ul class="nav flex-column">
                   <li class="overview-status nav-item">
                     <span class="text-muted">Status:</span>
-                    <strong>
-                      <span v-if="deviceAlertCount == 0" v-cloak class="good">Good</span>
-                      <span v-else v-cloak class="bad">{{ deviceAlertCount }} alerts</span>
-                    </strong>
+                      <span v-if="deviceAlertCount == 0" v-cloak class="good"><strong>Good</strong></span>
+                      <span v-else v-cloak class="bad"><strong>{{ deviceAlertCount }} alerts</strong></span>
                   </li>
                 </ul>
               </div>
               <div class="device-list-container overflow-auto">
                 <h6 class="nav-heading d-flex">Devices</h6>
-                <ul class="nav flex-column">
+                <ul v-if="devicesLoadingStatus == 'loaded'" v-cloak class="nav flex-column">
                   <li v-for="device in devices" :key="device.uuid" v-cloak class="device-list-device nav-item">
                     <a class="nav-link" href="#" @click.prevent="openDetails(device)">
                       <span v-if="device.name" class="device-name">{{ device.name }}</span>
@@ -52,6 +50,14 @@
                     </a>
                   </li>
                 </ul>
+                <div v-else class="spinner-container">
+                  <div v-if="devicesLoadingStatus == 'loading'" v-cloak class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <div v-else class="spinner-border text-danger" v-cloak role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
               </div>
             </div>
           </nav>
@@ -77,12 +83,22 @@
                 </tr>
               </table>
               <h2>Measurements</h2>
-              <ul v-if="activeDevice.uuid in measurements">
-                <li v-for="measurement in measurements[activeDevice.uuid]" :key="measurement.id">
+              <ul v-if="measurementsLoadingStatus == 'loaded'">
+                <li v-if="measurements" v-for="measurement in measurements[activeDevice.uuid]" :key="measurement.id">
                   {{ measurement }}
                 </li>
+                <li v-else>
+                  <span class="text-muted">None.</span>
+                </li>
               </ul>
-              <p v-else>None.</p>
+              <div class="spinner-container">
+                <div v-if="measurementsLoadingStatus == 'loading'" v-cloak class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div v-else class="spinner-border text-danger" v-cloak role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
             </div>
           </main>
         </div>

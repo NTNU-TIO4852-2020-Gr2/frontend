@@ -5,8 +5,10 @@ function fetchDevices() {
     axios.get(endpoint)
         .then(response => {
             parseDeviceData(response.data);
+            app.devicesLoadingStatus = LOADING_STATUS_LOADED;
         })
         .catch(error => {
+            app.devicesLoadingStatus = LOADING_STATUS_FAILED;
             console.error("Failed to fetch and parse devices: " + endpoint);
             console.error(error);
         });
@@ -37,8 +39,10 @@ function fetchMeasurements() {
     axios.get(endpoint)
         .then(response => {
             parseMeasurementData(response.data);
+            app.measurementsLoadingStatus = LOADING_STATUS_LOADED;
         })
         .catch(error => {
+            app.measurementsLoadingStatus = LOADING_STATUS_FAILED;
             console.error("Failed to fetch and parse measurements: " + endpoint);
             console.error(error);
         });

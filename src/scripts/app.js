@@ -1,5 +1,9 @@
 // Requires config
 
+const LOADING_STATUS_LOADING = "loading";
+const LOADING_STATUS_FAILED = "failed";
+const LOADING_STATUS_LOADED = "loaded";
+
 let app = new Vue({
   el: "#app",
   data: {
@@ -12,7 +16,9 @@ let app = new Vue({
     // State
     activeDevice: null,
     devices: {},
+    devicesLoadingStatus: LOADING_STATUS_LOADING,
     measurements: {},
+    measurementsLoadingStatus: LOADING_STATUS_LOADING,
     map: null,
     mapMarkers: {},
   },
