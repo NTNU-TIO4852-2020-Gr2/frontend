@@ -50,7 +50,7 @@
                 </ul>
                 <ul class="alerts-list nav flex-column">
                   <transition-group name="alerts-transition">
-                    <li v-for="(alert, alertId) in alerts" :key="alertId" v-cloak>
+                    <li v-for="alert in alerts" :key="alert.id" v-cloak>
                       <div class="alert" :class="alertSeverityCssClass(alert.severity)" role="alert">
                         <strong>{{ alertSeverityVerbose(alert.severity) }}:</strong>
                         <a :href="`#${alert.device}`" class="alert-link">
@@ -73,7 +73,8 @@
                   <li v-for="device in devices" :key="device.uuid" v-cloak class="device-list-device nav-item">
                     <a class="nav-link" href="#" @click.prevent="openDetails(device)">
                       <span class="device-name">{{ friendlyDeviceName(device) }}</span>
-                      <span class="device-status float-right text-muted">pH 0, 0&#176;C</span>
+                      <span class="device-status badge badge-light float-right">pH {{ lastMeasurementForDevice(device).ph }}</span>
+                      <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).temperature }} &#176;C</span>
                     </a>
                   </li>
                 </ul>

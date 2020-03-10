@@ -5,6 +5,13 @@ const LOADING_STATUS_FAILED = "failed";
 const LOADING_STATUS_LOADED = "loaded";
 const ALERT_SEVERITY_WARNING = "warning";
 const ALERT_SEVERITY_CRITICAL = "critical";
+const EMPTY_MEASUREMENT = {
+  "id": "",
+  "device": "",
+  "time": "",
+  "ph": "-",
+  "temperature": "-",
+};
 
 let app = new Vue({
   el: "#app",
@@ -19,6 +26,7 @@ let app = new Vue({
     devices: {},
     devicesLoadingStatus: LOADING_STATUS_LOADING,
     measurements: {},
+    lastMeasurements: {},
     measurementsLoadingStatus: LOADING_STATUS_LOADING,
     alerts: {},
     alertsLoadingStatus: LOADING_STATUS_LOADING,
@@ -29,7 +37,7 @@ let app = new Vue({
   computed: {
     alertCount: function() {
       return Object.keys(app.alerts).length;
-    }
+    },
   },
   watch: {
     devices: function(newDevices) {
@@ -107,6 +115,12 @@ let app = new Vue({
         default:
           return "Unknown";
       }
+    },
+    lastMeasurementForDevice: function(device) {
+      if (device.uuid in app.lastMeasurements) {
+        return app.lastMeasurements[device.uuid];
+      }
+      return EMPTY_MEASUREMENT;
     },
   },
 });
