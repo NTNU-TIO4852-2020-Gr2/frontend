@@ -78,7 +78,8 @@ function parseMeasurementData(data) {
 }
 
 function fetchAlerts() {
-  //let endpoint = config.backendRootUrl + config.backendAlertsEndpoint;
+  let endpoint = config.backendRootUrl + config.backendAlertsEndpoint;
+  // FIXME dummy data
   app.alerts = {
     "0": {
       "device": "d09df169-52f6-4724-8f3e-dd6557970e44",
@@ -89,6 +90,16 @@ function fetchAlerts() {
       "device": "2d1042a3-2eea-43f4-a3d3-1f1992e6ad7f",
       "severity": "critical",
       "message": "Very bad! 😱",
+    },
+    "50": {
+      "device": "2d1042a3-2eea-43f4-a3d3-1f1992e6a555",
+      "severity": "info",
+      "message": "Some info?",
+    },
+    "10000": {
+      "device": "2d1042a3-2eea-43f4-a3d3-1f191326a555",
+      "severity": "whatever",
+      "message": "Some unknown severity.",
     },
   };
   app.alertsLoadingStatus = LOADING_STATUS_LOADED;

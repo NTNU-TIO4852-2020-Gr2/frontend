@@ -16,7 +16,6 @@ let app = new Vue({
     backendRootUrlFriendly: config.backendRootUrlFriendly,
 
     // State
-    activeDevice: null,
     devices: {},
     devicesLoadingStatus: LOADING_STATUS_LOADING,
     measurements: {},
@@ -25,6 +24,7 @@ let app = new Vue({
     alertsLoadingStatus: LOADING_STATUS_LOADING,
     map: null,
     mapMarkers: {},
+    activeDevice: null,
   },
   computed: {
     alertCount: function() {
@@ -49,7 +49,7 @@ let app = new Vue({
       if (uuid && uuid in app.devices) {
         app.openDetails(uuid);
       } else {
-        app.closeDetails();
+        app.closeDetails(false);
       }
     },
     openDetails: function(deviceOrUuid) {
@@ -70,10 +70,12 @@ let app = new Vue({
         document.exitFullscreen();
       }
     },
-    closeDetails: function() {
+    closeDetails: function(clearUrl=true) {
       app.updatePageTitle(null);
       app.activeDevice = null;
-      location.hash = "";
+      if (clearUrl) {
+        location.hash = "";
+      }
       app.updatePageTitle(null);
     },
     postUpdateDevices: function() {
