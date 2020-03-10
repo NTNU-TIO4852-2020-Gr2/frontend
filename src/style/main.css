@@ -154,6 +154,12 @@ body {
 
 .details-container {
 	z-index: 1;
+	padding-top: 15px;
+	background-color: #fff;
+	opacity: 0.95;
+}
+
+.details-container .close-button {
 	background-color: #eee;
 }
 
