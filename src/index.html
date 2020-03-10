@@ -50,7 +50,7 @@
                 </ul>
                 <ul class="alerts-list nav flex-column">
                   <transition-group name="alerts-transition">
-                    <li v-for="alert in alerts" :key="alert.id" v-cloak>
+                    <li v-for="alert in alerts" :key="alert.id" v-cloak class="nav-item">
                       <div class="alert" :class="alertSeverityCssClass(alert.severity)" role="alert">
                         <strong>{{ alertSeverityVerbose(alert.severity) }}:</strong>
                         <a :href="`#${alert.device}`" class="alert-link">

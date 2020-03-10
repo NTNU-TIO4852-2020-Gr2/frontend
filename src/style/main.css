@@ -88,6 +88,11 @@ body {
 	transition: all 0.5s;
 }
 
+.alerts-list .nav-item {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
 .alerts-transition-leave-active {
 	 position: absolute;
 }
