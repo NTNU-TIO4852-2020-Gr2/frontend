@@ -15,6 +15,7 @@ function fetchDevices() {
       console.error("Failed to fetch and parse devices: " + endpoint);
       console.error(error);
     }).finally(() => {
+      app.postUpdateDevices();
       // Then load other stuff
       fetchAllMeasurements();
       fetchAlerts();
@@ -37,7 +38,6 @@ function parseDeviceData(data) {
   if (config.debug)
     console.log("Loaded " + Object.keys(devices).length + " devices.");
   app.devices = devices;
-  app.postUpdateDevices();
 }
 
 function fetchAllMeasurements() {
@@ -73,6 +73,8 @@ function fetchDeviceMeasurements(endpoint, deviceUuid) {
       app.measurementsLoadingStatuses[deviceUuid] = LOADING_STATUS_FAILED;
       console.error("Failed to fetch and parse measurements: " + url);
       console.error(error);
+    }).finally(() => {
+      app.postUpdateMeasurements(deviceUuid);
     });
 };
 

@@ -23,8 +23,10 @@ addScript("jQuery", "https://code.jquery.com/jquery-3.4.1.slim.min.js", "sha384-
 addScript("Popper.js", "https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js", "sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo", "anonymous");
 addScript("Bootstrap", "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js", "sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6", "anonymous");
 addScript("Google Maps", "https://maps.googleapis.com/maps/api/js?key=" + config.googleMapsApiKey);
+addScript("Chart.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js")
 
 // App
 addScript("App", "scripts/app.js");
-addScript("Map", "scripts/data.js");
+addScript("Data", "scripts/data.js");
 addScript("Map", "scripts/map.js");
+addScript("Chart", "scripts/chart.js");

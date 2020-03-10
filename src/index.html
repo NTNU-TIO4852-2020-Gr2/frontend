@@ -32,59 +32,63 @@
             <div class="sidebar-sticky">
               <!-- Alerts -->
               <div class="alerts-container">
-                <ul class="alerts-status nav flex-column">
-                  <li class="nav-item">
-                    <span class="text-muted">Alerts:</span>
-                    <span v-if="alertsLoadingStatus == 'loading'" v-cloak>
-                      <span class="text-muted"><em>Loading ...</em></span>
-                    </span>
-                    <span v-else-if="alertsLoadingStatus == 'finished'" v-cloak>
-                      <span v-if="alertCount < 0" v-cloak class="unknown">Unknown</span>
-                      <span v-else-if="alertCount == 0" v-cloak class="good"><strong>0</strong></span>
-                      <span v-else v-cloak class="bad"><strong>{{ alertCount }}</strong></span>
-                    </span>
-                    <span v-else v-cloak>
-                      <span class="bad">Failed to load devices!</span>
-                    </span>
-                  </li>
-                </ul>
-                <ul class="alerts-list nav flex-column">
-                  <transition-group name="alerts-transition">
-                    <li v-for="alert in alerts" :key="alert.id" v-cloak class="nav-item">
-                      <div class="alert" :class="alertSeverityCssClass(alert.severity)" role="alert">
-                        <strong>{{ alertSeverityVerbose(alert.severity) }}:</strong>
-                        <a :href="`#${alert.device}`" class="alert-link">
-                          <span v-if="alert.device in devices">{{ friendlyDeviceName(devices[alert.device]) }}</span>
-                          <span v-else>{{ alert.device }}</span>
-                        </a>
-                        <br />
-                        {{ alert.message }}
-                      </div>
+                <div :key="alertsKey">
+                  <ul class="alerts-status nav flex-column">
+                    <li class="nav-item">
+                      <span class="text-muted">Alerts:</span>
+                      <span v-if="alertsLoadingStatus == 'loading'" v-cloak>
+                        <span class="text-muted"><em>Loading ...</em></span>
+                      </span>
+                      <span v-else-if="alertsLoadingStatus == 'finished'" v-cloak>
+                        <span v-if="alertCount < 0" v-cloak class="unknown">Unknown</span>
+                        <span v-else-if="alertCount == 0" v-cloak class="good"><strong>0</strong></span>
+                        <span v-else v-cloak class="bad"><strong>{{ alertCount }}</strong></span>
+                      </span>
+                      <span v-else v-cloak>
+                        <span class="bad">Failed to load devices!</span>
+                      </span>
                     </li>
-                  </transition-group>
-                </ul>
+                  </ul>
+                  <ul class="alerts-list nav flex-column">
+                    <transition-group name="alerts-transition">
+                      <li v-for="alert in alerts" :key="alert.id" v-cloak class="nav-item">
+                        <div class="alert" :class="alertSeverityCssClass(alert.severity)" role="alert">
+                          <strong>{{ alertSeverityVerbose(alert.severity) }}:</strong>
+                          <a :href="`#${alert.device}`" class="alert-link">
+                            <span v-if="alert.device in devices">{{ friendlyDeviceName(devices[alert.device]) }}</span>
+                            <span v-else>{{ alert.device }}</span>
+                          </a>
+                          <br />
+                          {{ alert.message }}
+                        </div>
+                      </li>
+                    </transition-group>
+                  </ul>
+                </div>
               </div>
               <!-- Devices -->
               <div class="device-list-container overflow-auto">
-                <h6 class="nav-heading">Devices</h6>
-                <div class="input-group nav-item">
-                  <input type="text" v-model="deviceFilter" class="form-control" placeholder="Filter" aria-label="Device filter">
-                </div>
-                <ul v-if="devicesLoadingStatus == 'finished'" v-cloak class="nav flex-column">
-                  <li v-for="device in devicesFiltered" :key="device.uuid" v-cloak class="device-list-device nav-item">
-                    <a class="nav-link" href="#" @click.prevent="openDetails(device)">
-                      <span class="device-name">{{ friendlyDeviceName(device) }}</span>
-                      <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).ph | formatPh }}</span>
-                      <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).temperature | formatTemperature }}</span>
-                    </a>
-                  </li>
-                </ul>
-                <div v-else class="spinner-container">
-                  <div v-if="devicesLoadingStatus == 'loading'" v-cloak class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
+                <div :key="deviceListKey">
+                  <h6 class="nav-heading">Devices</h6>
+                  <div class="input-group nav-item">
+                    <input type="text" v-model="deviceFilter" class="form-control" placeholder="Filter" aria-label="Device filter">
                   </div>
-                  <div v-else v-cloak class="spinner-border text-danger" role="status">
-                    <span class="sr-only">Loading...</span>
+                  <ul v-if="devicesLoadingStatus == 'finished'" v-cloak class="nav flex-column">
+                    <li v-for="device in devicesFiltered" :key="device.uuid" v-cloak class="device-list-device nav-item">
+                      <a class="nav-link" href="#" @click.prevent="openDetails(device)">
+                        <span class="device-name">{{ friendlyDeviceName(device) }}</span>
+                        <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).ph | formatPh }}</span>
+                        <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).temperature | formatTemperature }}</span>
+                      </a>
+                    </li>
+                  </ul>
+                  <div v-else class="spinner-container">
+                    <div v-if="devicesLoadingStatus == 'loading'" v-cloak class="spinner-border" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <div v-else v-cloak class="spinner-border text-danger" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -98,20 +102,23 @@
             </div>
             <!-- Device details -->
             <transition name="details-transition">
-              <div v-if="activeDevice" :key="activeDevice.uuid" v-cloak class="details-container overflow-auto">
+              <div v-show="activeDevice" v-cloak class="details-container overflow-auto">
                 <button class="close-button btn btn-light float-right" @click.prevent="closeDetails" title="Close">X</button>
                 <div class="row">
                   <div class="col-md-12">
-                    <h1>{{ activeDevice.name ? activeDevice.name : "Nameless Device" }}</h1>
-                    <p><code>{{ activeDevice.uuid }}</code></p>
-                    <p><strong>WIP</strong></p>
-                    <h2>Measurements</h2>
-                    <ul v-if="measurementsLoadingStatus(activeDevice.uuid) == 'finished'">
-                      <li v-if="activeDevice.uuid in measurements" v-for="measurement in measurements[activeDevice.uuid]" :key="measurement.id">
-                        {{ measurement }}
-                      </li>
-                    </ul>
-                    <div v-else class="spinner-container">
+                    <h1 v-if="activeDevice">{{ activeDevice.name ? activeDevice.name : "Nameless Device" }}</h1>
+                    <p v-if="activeDevice"><code>{{ activeDevice.uuid }}</code></p>
+                    <div v-show="activeDevice && measurementsLoadingStatus(activeDevice.uuid) == 'finished'">
+                      <h3>Temperature</h3>
+                      <div>
+                        <canvas id="temperature-chart" class="chart"></canvas>
+                      </div>
+                      <h3>pH</h3>
+                      <div>
+                        <canvas id="ph-chart" class="chart"></canvas>
+                      </div>
+                    </div>
+                    <div v-if="activeDevice && measurementsLoadingStatus(activeDevice.uuid) != 'finished'" class="spinner-container">
                       <div v-if="measurementsLoadingStatus(activeDevice.uuid) == 'loading'" v-cloak class="spinner-border text-dark" role="status">
                         <span class="sr-only">Loading...</span>
                       </div>

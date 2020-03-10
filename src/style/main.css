@@ -181,6 +181,11 @@ body {
 	opacity: 0;
 }
 
+.details-container .chart {
+	width: 100% !important;
+	height: 350px !important;
+}
+
 /*
  * Utilities
  */

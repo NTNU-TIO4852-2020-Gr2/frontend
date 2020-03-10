@@ -34,6 +34,9 @@ let app = new Vue({
     mapMarkers: {},
     activeDevice: null,
     deviceFilter: null,
+    detailsKey: 1,
+    deviceListKey: 1,
+    alertsKey: 1,
   },
   computed: {
     devicesFiltered() {
@@ -53,9 +56,9 @@ let app = new Vue({
     },
   },
   watch: {
-    devices: function(newDevices) {
+    devices: function(val) {
       app.updateDetails();
-    }
+    },
   },
   methods: {
     updatePageTitle: function(subtitle) {
@@ -67,9 +70,10 @@ let app = new Vue({
     },
     updateDetails: function() {
       let uuid = location.hash.replace("#", "");
-      if (uuid && uuid in app.devices) {
+      let isOpen = !!app.activeDevice;
+      if (!isOpen && uuid && uuid in app.devices) {
         app.openDetails(uuid);
-      } else {
+      } else if (isOpen && (!uuid || !(uuid in app.devices))) {
         app.closeDetails(false);
       }
     },
@@ -85,6 +89,7 @@ let app = new Vue({
       app.activeDevice = device;
       location.hash = uuid;
       app.updatePageTitle(app.friendlyDeviceName(device));
+      window["drawDeviceCharts"]();
 
       // Exit fullscreen
       if (document.fullscreenElement) {
@@ -92,7 +97,6 @@ let app = new Vue({
       }
     },
     closeDetails: function(clearUrl=true) {
-      app.updatePageTitle(null);
       app.activeDevice = null;
       if (clearUrl) {
         location.hash = "";
@@ -100,7 +104,19 @@ let app = new Vue({
       app.updatePageTitle(null);
     },
     postUpdateDevices: function() {
+      app.deviceListKey++;
       window["updateMapDevices"]();
+    },
+    postUpdateMeasurements: function(deviceUuid=null) {
+      app.deviceListKey++;
+      let isForActiveDevice = deviceUuid && app.activeDevice && deviceUuid === app.activeDevice.uuid;
+      if (isForActiveDevice)  {
+        //app.detailsKey++;
+        window["drawDeviceCharts"]();
+      }
+    },
+    postUpdateAlerts: function() {
+      //app.alertsKey++;
     },
     friendlyDeviceName: function(device) {
       return device.name ? device.name : device.uuid;
@@ -141,6 +157,24 @@ let app = new Vue({
       }
       return EMPTY_MEASUREMENT;
     },
+    reverseSplitMeasurements: function(device) {
+      console.log("SPLIIIITT");
+      let timeValues = [];
+      let phValues = [];
+      let temperatureValues = [];
+      if (device.uuid in app.measurements) {
+        Object.values(app.measurements[device.uuid]).forEach(measurement => {
+          timeValues.unshift(measurement.time);
+          phValues.unshift(measurement.ph);
+          temperatureValues.unshift(measurement.temperature);
+        });
+      }
+      return {
+        "timeValues": timeValues,
+        "phValues": phValues,
+        "temperatureValues": temperatureValues,
+      };
+    }
   },
   filters: {
     formatPh: function (value) {
