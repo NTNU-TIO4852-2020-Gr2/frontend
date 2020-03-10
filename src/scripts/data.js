@@ -5,15 +5,18 @@ httpClient.defaults.timeout = config.dataFetchInterval;
 
 function fetchDevices() {
   let endpoint = config.backendRootUrl + config.backendDevicesEndpoint;
-  httpClient.get(endpoint)
-    .then(response => {
+  httpClient.get(endpoint).then(response => {
       parseDeviceData(response.data);
-      app.devicesLoadingStatus = LOADING_STATUS_LOADED;
-    })
-    .catch(error => {
+      app.devicesLoadingStatus = LOADING_STATUS_FINISHED;
+    }).catch(error => {
+      parseDeviceData({});
       app.devicesLoadingStatus = LOADING_STATUS_FAILED;
       console.error("Failed to fetch and parse devices: " + endpoint);
       console.error(error);
+    }).finally(() => {
+      // Then load other stuff
+      fetchAllMeasurements();
+      fetchAlerts();
     });
 };
 
@@ -36,23 +39,44 @@ function parseDeviceData(data) {
   app.postUpdateDevices();
 }
 
-function fetchMeasurements() {
+function fetchAllMeasurements() {
   let endpoint = config.backendRootUrl + config.backendMeasurementsEndpoint;
-  httpClient.get(endpoint)
+  // Remove for old devices
+  Object.keys(app.measurements).slice().forEach(uuid => {
+    if (!(uuid in app.devices)) {
+      parseMeasurementData(uuid, {});
+    }
+  });
+
+  // Fetch for current and new devices
+  Object.keys(app.devices).forEach(uuid => {
+    fetchDeviceMeasurements(endpoint, uuid);
+  });
+};
+
+function fetchDeviceMeasurements(endpoint, deviceUuid) {
+  if (app.devicesLoadingStatus !== LOADING_STATUS_FINISHED) {
+    app.measurementsLoadingStatuses[deviceUuid] = LOADING_STATUS_FAILED;
+    parseMeasurementData(deviceUuid, {});
+    return;
+  }
+
+  let url = endpoint + "?device=" + deviceUuid + "&max_count=" + config.measurementsMaxCount
+  httpClient.get(url)
     .then(response => {
-      parseMeasurementData(response.data);
-      app.measurementsLoadingStatus = LOADING_STATUS_LOADED;
+      parseMeasurementData(deviceUuid, response.data);
+      app.measurementsLoadingStatuses[deviceUuid] = LOADING_STATUS_FINISHED;
     })
     .catch(error => {
-      app.measurementsLoadingStatus = LOADING_STATUS_FAILED;
-      console.error("Failed to fetch and parse measurements: " + endpoint);
+      parseMeasurementData(deviceUuid, {});
+      app.measurementsLoadingStatuses[deviceUuid] = LOADING_STATUS_FAILED;
+      console.error("Failed to fetch and parse measurements: " + url);
       console.error(error);
     });
 };
 
-function parseMeasurementData(data) {
-  let measurements = {};
-  let lastMeasurements = {};
+function parseMeasurementData(deviceUuid, data) {
+  let deviceMeasurements = [];
   let count = 0;
   for (i = 0; i < data.length; i++) {
     let rawMeasurement = data[i];
@@ -64,26 +88,36 @@ function parseMeasurementData(data) {
     measurement["ph"] = rawMeasurement["ph"];
     measurement["temperature"] = rawMeasurement["temperature"];
 
-    let deviceMeasurements = measurements[deviceUuid];
-    if (!deviceMeasurements) {
-      deviceMeasurements = [];
-      measurements[deviceUuid] = deviceMeasurements;
+    if (deviceUuid != deviceUuid) {
+      // Wrong device
+      continue;
     }
+
     deviceMeasurements.push(measurement);
-
-    lastMeasurements[deviceUuid] = measurement;
-
     count++;
   }
 
-  app.measurements = measurements;
-  app.lastMeasurements = lastMeasurements;
+  if (count > 0) {
+    app.measurements[deviceUuid] = deviceMeasurements;
+    app.lastMeasurements[deviceUuid] = deviceMeasurements[0];
+  } else {
+    delete app.measurements[deviceUuid];
+    delete app.lastMeasurements[deviceUuid];
+  }
 
   if (config.debug)
-    console.log("Loaded " + count + " measurements.");
+    console.log("Loaded " + count + " measurements for device " + deviceUuid + ".");
 }
 
 function fetchAlerts() {
+  if (app.devicesLoadingStatus !== LOADING_STATUS_FINISHED) {
+    app.alertsLoadingStatus = LOADING_STATUS_FAILED;
+    // FIXME
+    //parseAlertsData({});
+    app.alerts = {};
+    return;
+  }
+
   let endpoint = config.backendRootUrl + config.backendAlertsEndpoint;
   // FIXME dummy data
   app.alerts = {
@@ -112,19 +146,11 @@ function fetchAlerts() {
       "message": "Some unknown severity.",
     },
   };
-  app.alertsLoadingStatus = LOADING_STATUS_LOADED;
+  app.alertsLoadingStatus = LOADING_STATUS_FINISHED;
 };
 
-function fetchAll() {
-  if (config.debug)
-    console.log("Fetching everything ...");
-  fetchDevices();
-  fetchMeasurements();
-  fetchAlerts();
-}
-
-// Start now and periodically
-fetchAll();
+// Fetch now and periodically
+fetchDevices();
 window.setInterval(function () {
-  fetchAll();
+  fetchDevices();
 }, config.dataFetchInterval);

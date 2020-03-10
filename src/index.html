@@ -38,7 +38,7 @@
                     <span v-if="alertsLoadingStatus == 'loading'" v-cloak>
                       <span class="text-muted"><em>Loading ...</em></span>
                     </span>
-                    <span v-else-if="alertsLoadingStatus == 'loaded'" v-cloak>
+                    <span v-else-if="alertsLoadingStatus == 'finished'" v-cloak>
                       <span v-if="alertCount < 0" v-cloak class="unknown">Unknown</span>
                       <span v-else-if="alertCount == 0" v-cloak class="good"><strong>0</strong></span>
                       <span v-else v-cloak class="bad"><strong>{{ alertCount }}</strong></span>
@@ -69,12 +69,12 @@
                 <h6 class="nav-heading">Devices</h6>
                 <!-- TODO filter -->
                 <span class="nav-heading">TODO filter</span>
-                <ul v-if="devicesLoadingStatus == 'loaded'" v-cloak class="nav flex-column">
+                <ul v-if="devicesLoadingStatus == 'finished'" v-cloak class="nav flex-column">
                   <li v-for="device in devices" :key="device.uuid" v-cloak class="device-list-device nav-item">
                     <a class="nav-link" href="#" @click.prevent="openDetails(device)">
                       <span class="device-name">{{ friendlyDeviceName(device) }}</span>
-                      <span class="device-status badge badge-light float-right">pH {{ lastMeasurementForDevice(device).ph }}</span>
-                      <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).temperature }} &#176;C</span>
+                      <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).ph | formatPh }}</span>
+                      <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).temperature | formatTemperature }}</span>
                     </a>
                   </li>
                 </ul>
@@ -105,30 +105,13 @@
                     <p><code>{{ activeDevice.uuid }}</code></p>
                     <p><strong>WIP</strong></p>
                     <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <h2>Measurements</h2>
-                    <ul v-if="measurementsLoadingStatus == 'loaded'">
+                    <ul v-if="measurementsLoadingStatus(activeDevice.uuid) == 'finished'">
                       <li v-if="activeDevice.uuid in measurements" v-for="measurement in measurements[activeDevice.uuid]" :key="measurement.id">
                         {{ measurement }}
                       </li>
-                      <li v-else>
-                        <span class="text-muted">None.</span>
-                      </li>
                     </ul>
-                    <div class="spinner-container">
-                      <div v-if="measurementsLoadingStatus == 'loading'" v-cloak class="spinner-border" role="status">
+                    <div v-else class="spinner-container">
+                      <div v-if="measurementsLoadingStatus(activeDevice.uuid) == 'loading'" v-cloak class="spinner-border text-dark" role="status">
                         <span class="sr-only">Loading...</span>
                       </div>
                       <div v-else class="spinner-border text-danger" v-cloak role="status">

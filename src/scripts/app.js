@@ -2,15 +2,15 @@
 
 const LOADING_STATUS_LOADING = "loading";
 const LOADING_STATUS_FAILED = "failed";
-const LOADING_STATUS_LOADED = "loaded";
+const LOADING_STATUS_FINISHED = "finished";
 const ALERT_SEVERITY_WARNING = "warning";
 const ALERT_SEVERITY_CRITICAL = "critical";
 const EMPTY_MEASUREMENT = {
-  "id": "",
+  "id": null,
   "device": "",
   "time": "",
-  "ph": "-",
-  "temperature": "-",
+  "ph": null,
+  "temperature": null,
 };
 
 let app = new Vue({
@@ -27,7 +27,7 @@ let app = new Vue({
     devicesLoadingStatus: LOADING_STATUS_LOADING,
     measurements: {},
     lastMeasurements: {},
-    measurementsLoadingStatus: LOADING_STATUS_LOADING,
+    measurementsLoadingStatuses: {},
     alerts: {},
     alertsLoadingStatus: LOADING_STATUS_LOADING,
     map: null,
@@ -92,6 +92,12 @@ let app = new Vue({
     friendlyDeviceName: function(device) {
       return device.name ? device.name : device.uuid;
     },
+    measurementsLoadingStatus: function(deviceUuid) {
+      if (!(deviceUuid in app.measurementsLoadingStatuses)) {
+        return LOADING_STATUS_LOADING;
+      }
+      return app.measurementsLoadingStatuses[deviceUuid];
+    },
     alertSeverityCssClass: function(severity) {
       switch(severity) {
         case "info":
@@ -121,6 +127,20 @@ let app = new Vue({
         return app.lastMeasurements[device.uuid];
       }
       return EMPTY_MEASUREMENT;
+    },
+  },
+  filters: {
+    formatPh: function (value) {
+      if (!value) {
+        return "";
+      }
+      return "pH " + value.toFixed(2);
+    },
+    formatTemperature: function (value) {
+      if (!value) {
+        return "";
+      }
+      return value.toFixed(2) + "\u2103";
     },
   },
 });
