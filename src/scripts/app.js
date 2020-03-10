@@ -3,6 +3,8 @@
 const LOADING_STATUS_LOADING = "loading";
 const LOADING_STATUS_FAILED = "failed";
 const LOADING_STATUS_LOADED = "loaded";
+const ALERT_SEVERITY_WARNING = "warning";
+const ALERT_SEVERITY_CRITICAL = "critical";
 
 let app = new Vue({
   el: "#app",
@@ -19,33 +21,96 @@ let app = new Vue({
     devicesLoadingStatus: LOADING_STATUS_LOADING,
     measurements: {},
     measurementsLoadingStatus: LOADING_STATUS_LOADING,
+    alerts: {},
+    alertsLoadingStatus: LOADING_STATUS_LOADING,
     map: null,
     mapMarkers: {},
   },
   computed: {
-    deviceAlertCount: function() {
-      // TODO
-      return -1;
-    },
+    alertCount: function() {
+      return Object.keys(app.alerts).length;
+    }
+  },
+  watch: {
+    devices: function(newDevices) {
+      app.updateDetails();
+    }
   },
   methods: {
-    openDetails: function(device) {
+    updatePageTitle: function(subtitle) {
+      if (subtitle) {
+        document.title = app.siteTitle + " | " + subtitle;
+      } else {
+        document.title = app.siteTitle;
+      }
+    },
+    updateDetails: function() {
+      let uuid = location.hash.replace("#", "");
+      if (uuid && uuid in app.devices) {
+        app.openDetails(uuid);
+      } else {
+        app.closeDetails();
+      }
+    },
+    openDetails: function(deviceOrUuid) {
       let uuid = null;
-      if (typeof device === "object")
-        uuid = device.uuid;
+      if (typeof deviceOrUuid === "object")
+        uuid = deviceOrUuid.uuid;
       else
-        uuid = device;
-      app.activeDevice = app.devices[uuid];
+        uuid = deviceOrUuid;
+      
+      // Open details
+      let device = app.devices[uuid];
+      app.activeDevice = device;
+      location.hash = uuid;
+      app.updatePageTitle(app.friendlyDeviceName(device));
+
       // Exit fullscreen
       if (document.fullscreenElement) {
         document.exitFullscreen();
       }
     },
     closeDetails: function() {
+      app.updatePageTitle(null);
       app.activeDevice = null;
+      location.hash = "";
+      app.updatePageTitle(null);
     },
     postUpdateDevices: function() {
       window["updateMapDevices"]();
-    }
+    },
+    friendlyDeviceName: function(device) {
+      return device.name ? device.name : device.uuid;
+    },
+    alertSeverityCssClass: function(severity) {
+      switch(severity) {
+        case "info":
+          return "alert-primary";
+        case "warning":
+          return "alert-warning";
+        case "critical":
+          return "alert-danger";
+        default:
+          return "alert-dark";
+      }
+    },
+    alertSeverityVerbose: function(severity) {
+      switch(severity) {
+        case "info":
+          return "Info";
+        case "warning":
+          return "Warning";
+        case "critical":
+          return "Critical";
+        default:
+          return "Unknown";
+      }
+    },
   },
 });
+
+app.updatePageTitle(null);
+
+window.addEventListener('hashchange', function() {
+  app.updateDetails();
+}, false);

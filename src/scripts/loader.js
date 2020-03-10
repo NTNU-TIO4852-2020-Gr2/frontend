@@ -1,7 +1,3 @@
-// Update page title
-document.title = config.siteName;
-document.write(config.siteName);
-
 function addScript(name, src, integrity=null, crossorigin=null) {
   console.log("Adding script \"" + name + "\": " + src);
   let script = document.createElement('script');

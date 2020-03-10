@@ -33,10 +33,29 @@
               <div class="overview-container">
                 <ul class="nav flex-column">
                   <li class="overview-status nav-item">
-                    <span class="text-muted">Status:</span>
-                    <span v-if="deviceAlertCount == 0" v-cloak class="good"><strong>Good</strong></span>
-                    <span v-else-if="deviceAlertCount < 0" v-cloak class="unknown"><strong>Unknown</strong></span>
-                    <span v-else v-cloak class="bad"><strong>{{ deviceAlertCount }} alerts</strong></span>
+                    <span class="text-muted">Alerts:</span>
+                    <span v-if="alertsLoadingStatus == 'loading'" v-cloak>
+                      <span class="text-muted"><em>Loading ...</em></span>
+                    </span>
+                    <span v-else-if="alertsLoadingStatus == 'loaded'" v-cloak>
+                      <span v-if="alertCount < 0" v-cloak class="unknown">Unknown</span>
+                      <span v-else-if="alertCount == 0" v-cloak class="good"><strong>0</strong></span>
+                      <span v-else v-cloak class="bad"><strong>{{ alertCount }}</strong></span>
+                    </span>
+                    <span v-else v-cloak>
+                      <span class="bad">Failed to load devices!</span>
+                    </span>
+                  </li>
+                  <li v-for="(alert, alertId) in alerts" :key="alertId" v-cloak>
+                    <div class="alert" :class="alertSeverityCssClass(alert.severity)" role="alert">
+                      <strong>{{ alertSeverityVerbose(alert.severity) }}:</strong>
+                      <a :href="`#${alert.device}`" class="alert-link">
+                        <span v-if="alert.device in devices">{{ friendlyDeviceName(devices[alert.device]) }}</span>
+                        <span v-else>{{ alert.device }}</span>
+                      </a>
+                      <br />
+                      {{ alert.message }}
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -45,8 +64,7 @@
                 <ul v-if="devicesLoadingStatus == 'loaded'" v-cloak class="nav flex-column">
                   <li v-for="device in devices" :key="device.uuid" v-cloak class="device-list-device nav-item">
                     <a class="nav-link" href="#" @click.prevent="openDetails(device)">
-                      <span v-if="device.name" class="device-name">{{ device.name }}</span>
-                      <span v-else class="device-name">{{ device.uuid }}</span>
+                      <span class="device-name">{{ friendlyDeviceName(device) }}</span>
                       <span class="device-status float-right text-muted">pH 0, 0&#176;C</span>
                     </a>
                   </li>
@@ -55,7 +73,7 @@
                   <div v-if="devicesLoadingStatus == 'loading'" v-cloak class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                   </div>
-                  <div v-else class="spinner-border text-danger" v-cloak role="status">
+                  <div v-else v-cloak class="spinner-border text-danger" role="status">
                     <span class="sr-only">Loading...</span>
                   </div>
                 </div>
@@ -71,21 +89,12 @@
             <!-- Device details -->
             <div v-if="activeDevice" v-cloak class="details-container overflow-auto">
               <button class="close-button btn btn-light float-right" @click.prevent="closeDetails" title="Close">X</button>
-              <p><strong>WIP</strong></p>
               <h1>{{ activeDevice.name ? activeDevice.name : "Nameless Device" }}</h1>
-              <table>
-                <tr>
-                  <td>UUID</td>
-                  <td><code>{{ activeDevice.uuid }}</code></td>
-                </tr>
-                <tr>
-                  <td>Measurements</td>
-                  <td>{{ activeDevice.measurementCount }}</td>
-                </tr>
-              </table>
+              <p><code>{{ activeDevice.uuid }}</code></p>
+              <p><strong>WIP</strong></p>
               <h2>Measurements</h2>
               <ul v-if="measurementsLoadingStatus == 'loaded'">
-                <li v-if="measurements" v-for="measurement in measurements[activeDevice.uuid]" :key="measurement.id">
+                <li v-if="activeDevice.uuid in measurements" v-for="measurement in measurements[activeDevice.uuid]" :key="measurement.id">
                   {{ measurement }}
                 </li>
                 <li v-else>

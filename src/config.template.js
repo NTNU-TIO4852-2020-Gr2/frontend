@@ -2,15 +2,18 @@
 // Copy this file to config.js and add config options there.
 
 const config = {
+    // General
     debug: false,
     siteName: "PH20",
     rootUrl: "./",
+    dataFetchInterval: 10000, // ms
 
     // Backend
     backendRootUrl: "http://localhost:9001/v0/",
     backendRootUrlFriendly: "http://localhost:9001/",
     backendDevicesEndpoint: "devices",
     backendMeasurementsEndpoint: "measurements",
+    backendAlertsEndpoint: "alerts",
 
     // Google Maps
     googleMapsApiKey: "",
