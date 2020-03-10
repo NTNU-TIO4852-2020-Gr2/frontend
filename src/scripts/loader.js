@@ -1,5 +1,9 @@
+// Requires config
+
 function addScript(name, src, integrity=null, crossorigin=null) {
-  console.log("Adding script \"" + name + "\": " + src);
+  if (config.debug) {
+    console.log("Adding script \"" + name + "\": " + src);
+  }
   let script = document.createElement('script');
   script.defer = true;
   script.async = false;

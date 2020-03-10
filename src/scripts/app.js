@@ -158,7 +158,6 @@ let app = new Vue({
       return EMPTY_MEASUREMENT;
     },
     reverseSplitMeasurements: function(device) {
-      console.log("SPLIIIITT");
       let timeValues = [];
       let phValues = [];
       let temperatureValues = [];
