@@ -33,8 +33,21 @@ let app = new Vue({
     map: null,
     mapMarkers: {},
     activeDevice: null,
+    deviceFilter: null,
   },
   computed: {
+    devicesFiltered() {
+      return Object.fromEntries(Object.entries(app.devices).filter(([uuid, device]) => {
+        if (!app.deviceFilter) {
+          return true;
+        }
+        if (!device.name) {
+          return false;
+        }
+        return device.name.toLowerCase().indexOf(app.deviceFilter.toLowerCase()) > -1
+          || device.uuid.toLowerCase().indexOf(app.deviceFilter.toLowerCase()) > -1;
+      }));
+    },
     alertCount: function() {
       return Object.keys(app.alerts).length;
     },

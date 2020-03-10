@@ -67,10 +67,11 @@
               <!-- Devices -->
               <div class="device-list-container overflow-auto">
                 <h6 class="nav-heading">Devices</h6>
-                <!-- TODO filter -->
-                <span class="nav-heading">TODO filter</span>
+                <div class="input-group nav-item">
+                  <input type="text" v-model="deviceFilter" class="form-control" placeholder="Filter" aria-label="Device filter">
+                </div>
                 <ul v-if="devicesLoadingStatus == 'finished'" v-cloak class="nav flex-column">
-                  <li v-for="device in devices" :key="device.uuid" v-cloak class="device-list-device nav-item">
+                  <li v-for="device in devicesFiltered" :key="device.uuid" v-cloak class="device-list-device nav-item">
                     <a class="nav-link" href="#" @click.prevent="openDetails(device)">
                       <span class="device-name">{{ friendlyDeviceName(device) }}</span>
                       <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).ph | formatPh }}</span>
