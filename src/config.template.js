@@ -7,6 +7,7 @@ const config = {
     siteName: "PH20",
     rootUrl: "./",
     dataFetchInterval: 10000, // ms
+    measurementsCount: 100, // per device
 
     // Backend
     backendRootUrl: "http://localhost:9001/v0/",
