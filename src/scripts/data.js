@@ -5,7 +5,8 @@ httpClient.defaults.timeout = config.dataFetchInterval;
 
 function fetchDevices() {
   let endpoint = config.backendRootUrl + config.backendDevicesEndpoint;
-  httpClient.get(endpoint).then(response => {
+  let url = endpoint + "?ordering=name";
+  httpClient.get(url).then(response => {
       parseDeviceData(response.data);
       app.devicesLoadingStatus = LOADING_STATUS_FINISHED;
     }).catch(error => {
