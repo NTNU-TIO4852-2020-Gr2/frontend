@@ -5,7 +5,7 @@ const config = {
     // General
     debug: false,
     siteName: "PH20",
-    rootUrl: "./",
+    rootUrl: "/",
     dataFetchInterval: 30000, // ms
     measurementsMaxCount: 500, // per device
 

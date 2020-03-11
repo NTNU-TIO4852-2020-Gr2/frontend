@@ -42,7 +42,7 @@ function drawDeviceCharts() {
     return;
   }
 
-  let values = app.reverseSplitMeasurements(app.activeDevice);
+  let values = app.parseMeasurements(app.activeDevice);
   temperatureChart.data.labels = values.timeValues;
   temperatureChart.data.datasets[0].data = values.temperatureValues;
   phChart.data.labels = values.timeValues;

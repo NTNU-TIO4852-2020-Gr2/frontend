@@ -44,9 +44,6 @@ let app = new Vue({
         if (!app.deviceFilter) {
           return true;
         }
-        if (!device.name) {
-          return false;
-        }
         return device.name.toLowerCase().indexOf(app.deviceFilter.toLowerCase()) > -1
           || device.uuid.toLowerCase().indexOf(app.deviceFilter.toLowerCase()) > -1;
       }));
@@ -71,9 +68,9 @@ let app = new Vue({
     updateDetails: function() {
       let uuid = location.hash.replace("#", "");
       let isOpen = !!app.activeDevice;
-      if (!isOpen && uuid && uuid in app.devices) {
+      if (uuid && uuid in app.devices) {
         app.openDetails(uuid);
-      } else if (isOpen && (!uuid || !(uuid in app.devices))) {
+      } else {
         app.closeDetails(false);
       }
     },
@@ -157,7 +154,7 @@ let app = new Vue({
       }
       return EMPTY_MEASUREMENT;
     },
-    reverseSplitMeasurements: function(device) {
+    parseMeasurements: function(device) {
       let timeValues = [];
       let phValues = [];
       let temperatureValues = [];

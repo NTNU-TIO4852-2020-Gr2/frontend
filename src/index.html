@@ -75,7 +75,7 @@
                   </div>
                   <ul v-if="devicesLoadingStatus == 'finished'" v-cloak class="nav flex-column">
                     <li v-for="device in devicesFiltered" :key="device.uuid" v-cloak class="device-list-device nav-item">
-                      <a class="nav-link" href="#" @click.prevent="openDetails(device)">
+                      <a class="nav-link" :href="`#${device.uuid}`">
                         <span class="device-name">{{ friendlyDeviceName(device) }}</span>
                         <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).ph | formatPh }}</span>
                         <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).temperature | formatTemperature }}</span>
