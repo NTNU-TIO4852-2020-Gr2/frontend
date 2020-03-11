@@ -158,32 +158,46 @@ let app = new Vue({
       let timeValues = [];
       let phValues = [];
       let temperatureValues = [];
+      let minPh = null;
+      let maxPh = null;
       if (device.uuid in app.measurements) {
         Object.values(app.measurements[device.uuid]).forEach(measurement => {
-          timeValues.unshift(measurement.time);
+          let formattedTime = app.$options.filters.formatDateTime(measurement.time);
+          timeValues.unshift(formattedTime);
           phValues.unshift(measurement.ph);
           temperatureValues.unshift(measurement.temperature);
+          if (minPh == null || measurement.ph < minPh) {
+            minPh = measurement.ph;
+          }
+          if (maxPh == null || measurement.ph > maxPh) {
+            maxPh = measurement.ph;
+          }
         });
       }
       return {
         "timeValues": timeValues,
         "phValues": phValues,
         "temperatureValues": temperatureValues,
+        "minPh": minPh,
+        "maxPh": maxPh,
       };
     }
   },
   filters: {
     formatPh: function (value) {
-      if (!value) {
-        return "";
+      if (value) {
+        return "pH " + value.toFixed(2);
       }
-      return "pH " + value.toFixed(2);
     },
     formatTemperature: function (value) {
-      if (!value) {
-        return "";
+      if (value) {
+        return value.toFixed(2) + "\u2103";
       }
-      return value.toFixed(2) + "\u2103";
+    },
+    formatDateTime: function (value) {
+      if (value) {
+        return moment(String(value)).format('MM/DD/YYYY hh:mm');
+      }
     },
   },
 });
