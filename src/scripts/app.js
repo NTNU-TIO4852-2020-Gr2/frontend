@@ -67,7 +67,6 @@ let app = new Vue({
     },
     updateDetails: function() {
       let uuid = location.hash.replace("#", "");
-      let isOpen = !!app.activeDevice;
       if (uuid && uuid in app.devices) {
         app.openDetails(uuid);
       } else {
@@ -86,7 +85,7 @@ let app = new Vue({
       app.activeDevice = device;
       location.hash = uuid;
       app.updatePageTitle(app.friendlyDeviceName(device));
-      window["drawDeviceCharts"]();
+      app.drawDeviceCharts();
 
       // Exit fullscreen
       if (document.fullscreenElement) {
@@ -102,18 +101,24 @@ let app = new Vue({
     },
     postUpdateDevices: function() {
       app.deviceListKey++;
-      window["updateMapDevices"]();
+      app.updateMapDevices();
     },
     postUpdateMeasurements: function(deviceUuid=null) {
       app.deviceListKey++;
       let isForActiveDevice = deviceUuid && app.activeDevice && deviceUuid === app.activeDevice.uuid;
       if (isForActiveDevice)  {
         //app.detailsKey++;
-        window["drawDeviceCharts"]();
+        app.drawDeviceCharts();
       }
     },
     postUpdateAlerts: function() {
       //app.alertsKey++;
+    },
+    updateMapDevices: function() {
+      window["updateMapDevices"]();
+    },
+    drawDeviceCharts: function() {
+      window["drawDeviceCharts"]();
     },
     friendlyDeviceName: function(device) {
       return device.name ? device.name : device.uuid;
@@ -196,7 +201,7 @@ let app = new Vue({
     },
     formatDateTime: function (value) {
       if (value) {
-        return moment(String(value)).format('MM/DD/YYYY hh:mm');
+        return moment(String(value)).format('YYYY-MM-DD HH:mm');
       }
     },
   },

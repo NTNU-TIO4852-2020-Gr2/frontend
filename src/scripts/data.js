@@ -128,6 +128,14 @@ function fetchAlerts() {
       "id": "0",
       "device": "d09df169-52f6-4724-8f3e-dd6557970e44",
       "severity": "warning",
+      "message": "Some value out of range.",
+    },
+  };
+  /*app.alerts = {
+    "0": {
+      "id": "0",
+      "device": "d09df169-52f6-4724-8f3e-dd6557970e44",
+      "severity": "warning",
       "message": "Some value out of range, I guess.",
     },
     "3": {
@@ -148,7 +156,7 @@ function fetchAlerts() {
       "severity": "whatever",
       "message": "Some unknown severity.",
     },
-  };
+  };*/
   app.alertsLoadingStatus = LOADING_STATUS_FINISHED;
 };
 

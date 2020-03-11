@@ -3,17 +3,14 @@
 const CHART_MIN_PH = 0;
 const CHART_MAX_PH = 14;
 
-let temperatureCanvas = document.getElementById("temperature-chart");
-let phCanvas = document.getElementById("ph-chart");
-
-let temperatureChart = new Chart(temperatureCanvas.getContext('2d'), {
+const phChartOptions = {
   type: 'line',
   data: {
     labels: [],
     datasets: [{
         label: "Temperature (\u2103)",
         backgroundColor: 'rgb(0, 0, 0, 0.0)',
-        borderColor: 'rgb(0, 0, 0)',
+        borderColor: 'rgb(150, 0, 150)',
         data: [],
     }],
   },
@@ -33,16 +30,16 @@ let temperatureChart = new Chart(temperatureCanvas.getContext('2d'), {
       }],
     },
   },
-});
+};
 
-let phChart = new Chart(phCanvas.getContext('2d'), {
+const temperatureChartOptions = {
   type: 'line',
   data: {
     labels: [],
     datasets: [{
-        label: "pH",
+        label: "Temperature (\u2103)",
         backgroundColor: 'rgb(0, 0, 0, 0.0)',
-        borderColor: 'rgb(0, 0, 0)',
+        borderColor: 'rgb(0, 150, 150)',
         data: [],
     }],
   },
@@ -62,11 +59,23 @@ let phChart = new Chart(phCanvas.getContext('2d'), {
       }],
     },
   },
-});
+};
+
+let phChart = null;
+let temperatureChart = null;
 
 function drawDeviceCharts() {
   if (!app.activeDevice) {
     return;
+  }
+
+  if (!phChart) {
+    let phCanvas = document.getElementById("ph-chart");
+    phChart = new Chart(phCanvas.getContext('2d'), phChartOptions);
+  }
+  if (!temperatureChart) {
+    let temperatureCanvas = document.getElementById("temperature-chart");
+    temperatureChart = new Chart(temperatureCanvas.getContext('2d'), temperatureChartOptions);
   }
 
   let values = app.parseMeasurements(app.activeDevice);
@@ -75,7 +84,6 @@ function drawDeviceCharts() {
   temperatureChart.data.datasets[0].data = values.temperatureValues;
   temperatureChart.data.datasets[0].borderColor = 'rgb(0, 150, 150)';
   temperatureChart.update();
-
 
   let minPh = CHART_MIN_PH;
   if (values.minPh && values.minPh > CHART_MIN_PH) {

@@ -103,31 +103,49 @@
             <!-- Device details -->
             <transition name="details-transition">
               <div v-show="activeDevice" v-cloak class="details-container overflow-auto">
-                <button class="close-button btn btn-light float-right" @click.prevent="closeDetails" title="Close">X</button>
+                <button class="close-button btn btn-light" @click.prevent="closeDetails" title="Close">X</button>
+                <!-- Banner -->
                 <div class="row">
-                  <div class="col-md-12">
-                    <h1 v-if="activeDevice">{{ activeDevice.name ? activeDevice.name : "Nameless Device" }}</h1>
-                    <p v-if="activeDevice"><code>{{ activeDevice.uuid }}</code></p>
-                    <div v-show="activeDevice && measurementsLoadingStatus(activeDevice.uuid) == 'finished'">
-                      <h3>Temperature</h3>
-                      <div>
-                        <canvas id="temperature-chart" class="chart"></canvas>
-                      </div>
-                      <h3>pH</h3>
-                      <div>
-                        <canvas id="ph-chart" class="chart"></canvas>
-                      </div>
+                  <div v-if="activeDevice" class="col-md-12 banner">
+                    <h1>{{ activeDevice.name ? activeDevice.name : "Nameless Device" }}</h1>
+                    <code>{{ activeDevice.uuid }}</code>
+                  </div><!-- .col -->
+                </div><!-- .row -->
+                <!-- Status boxes -->
+                <div class="row">
+                  <div v-if="activeDevice" class="col-md-12 status-boxes d-flex justify-content-around">
+                    <div class="status-box">
+                      <h5>pH 4.69</h5>
                     </div>
-                    <div v-if="activeDevice && measurementsLoadingStatus(activeDevice.uuid) != 'finished'" class="spinner-container">
-                      <div v-if="measurementsLoadingStatus(activeDevice.uuid) == 'loading'" v-cloak class="spinner-border text-dark" role="status">
-                        <span class="sr-only">Loading...</span>
-                      </div>
-                      <div v-else class="spinner-border text-danger" v-cloak role="status">
-                        <span class="sr-only">Loading...</span>
-                      </div>
+                    <div class="status-box">
+                      <h5>21.00 &#176;C</h5>
                     </div>
-                  </div>
-                </div>
+                  </div><!-- .col -->
+                </div><!-- .row -->
+                <!-- Graphs -->
+                <div class="row">
+                  <div v-show="activeDevice && measurementsLoadingStatus(activeDevice.uuid) == 'finished'" class="col-md-12 charts">
+                    <h3>Temperature</h3>
+                    <div>
+                      <canvas id="temperature-chart" class="chart"></canvas>
+                    </div>
+                    <h3>pH</h3>
+                    <div>
+                      <canvas id="ph-chart" class="chart"></canvas>
+                    </div>
+                  </div><!-- .col -->
+                </div><!-- .row -->
+                <!-- Spinners -->
+                <div class="row">
+                  <div v-if="activeDevice && measurementsLoadingStatus(activeDevice.uuid) != 'finished'" class="col-md-12 spinner-container">
+                    <div v-if="measurementsLoadingStatus(activeDevice.uuid) == 'loading'" v-cloak class="spinner-border text-dark" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <div v-else class="spinner-border text-danger" v-cloak role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div><!-- .col -->
+                </div><!-- .row -->
               </div>
             </transition>
           </main>
