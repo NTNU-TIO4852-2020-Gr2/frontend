@@ -33,6 +33,7 @@
               <!-- Alerts -->
               <div class="alerts-container">
                 <div :key="alertsKey">
+                  <!--
                   <ul class="alerts-status nav flex-column">
                     <li class="nav-item">
                       <span class="text-muted">Alerts:</span>
@@ -49,6 +50,7 @@
                       </span>
                     </li>
                   </ul>
+                  -->
                   <ul class="alerts-list nav flex-column">
                     <transition-group name="alerts-transition">
                       <li v-for="alert in alerts" :key="alert.id" v-cloak class="nav-item">
@@ -105,26 +107,56 @@
               <div v-show="activeDevice" v-cloak class="details-container overflow-auto">
                 <button class="close-button btn btn-light" @click.prevent="closeDetails" title="Close">X</button>
                 <!-- Banner -->
-                <div class="row">
-                  <div v-if="activeDevice" class="col-md-12 banner">
+                <div class="row banner">
+                  <div v-if="activeDevice" class="col">
                     <h1>{{ activeDevice.name ? activeDevice.name : "Nameless Device" }}</h1>
                     <code>{{ activeDevice.uuid }}</code>
                   </div><!-- .col -->
                 </div><!-- .row -->
                 <!-- Status boxes -->
-                <div class="row">
-                  <div v-if="activeDevice" class="col-md-12 status-boxes d-flex justify-content-around">
-                    <div class="status-box">
-                      <h5>pH 4.69</h5>
-                    </div>
-                    <div class="status-box">
-                      <h5>21.00 &#176;C</h5>
-                    </div>
+                <div class="row status-titles">
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <h6 class="status-title">Nå</h6>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <h6 class="status-title">Gjennomsnitt</h6>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <h6 class="status-title">Minimum</h6>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <h6 class="status-title">Maximum</h6>
+                  </div>
+                </div><!-- .row -->
+                <div class="row status-boxes">
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <div class="status-box good"><h6>pH 4.69</h6></div>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <div class="status-box warning"><h6>21.00 &#176;C</h6></div>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <div class="status-box warning"><h6>pH 4.69</h6></div>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <div class="status-box good"><h6>21.00 &#176;C</h6></div>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <div class="status-box warning"><h6>pH 4.69</h6></div>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <div class="status-box critical"><h6>21.00 &#176;C</h6></div>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <div class="status-box critical"><h6>pH 4.69</h6></div>
+                  </div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                    <div class="status-box good"><h6>21.00 &#176;C</h6></div>
                   </div><!-- .col -->
                 </div><!-- .row -->
-                <!-- Graphs -->
-                <div class="row">
-                  <div v-show="activeDevice && measurementsLoadingStatus(activeDevice.uuid) == 'finished'" class="col-md-12 charts">
+                <!-- Charts -->
+                <div class="row charts">
+                  <div v-show="activeDeviceMeasurementsLoaded" class="col charts">
                     <h3>Temperature</h3>
                     <div>
                       <canvas id="temperature-chart" class="chart"></canvas>
@@ -137,7 +169,7 @@
                 </div><!-- .row -->
                 <!-- Spinners -->
                 <div class="row">
-                  <div v-if="activeDevice && measurementsLoadingStatus(activeDevice.uuid) != 'finished'" class="col-md-12 spinner-container">
+                  <div v-if="activeDevice && measurementsLoadingStatus(activeDevice.uuid) != 'finished'" class="col spinner-container">
                     <div v-if="measurementsLoadingStatus(activeDevice.uuid) == 'loading'" v-cloak class="spinner-border text-dark" role="status">
                       <span class="sr-only">Loading...</span>
                     </div>

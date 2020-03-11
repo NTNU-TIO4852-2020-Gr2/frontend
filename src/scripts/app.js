@@ -129,6 +129,9 @@ let app = new Vue({
       }
       return app.measurementsLoadingStatuses[deviceUuid];
     },
+    activeDeviceMeasurementsLoaded: function() {
+      return app.activeDevice && app.measurementsLoadingStatus(activeDevice.uuid) == LOADING_STATUS_FINISHED;
+    },
     alertSeverityCssClass: function(severity) {
       switch(severity) {
         case "info":

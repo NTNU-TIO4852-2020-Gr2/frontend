@@ -83,6 +83,7 @@ function drawDeviceCharts() {
   temperatureChart.data.labels = values.timeValues;
   temperatureChart.data.datasets[0].data = values.temperatureValues;
   temperatureChart.data.datasets[0].borderColor = 'rgb(0, 150, 150)';
+  temperatureChart.data.datasets[0].backgroundColor = 'rgba(0, 150, 150, 0.1)';
   temperatureChart.update();
 
   let minPh = CHART_MIN_PH;
@@ -97,6 +98,7 @@ function drawDeviceCharts() {
   phChart.data.labels = values.timeValues;
   phChart.data.datasets[0].data = values.phValues;
   phChart.data.datasets[0].borderColor = 'rgb(150, 0, 150)';
+  phChart.data.datasets[0].backgroundColor = 'rgba(150, 0, 150, 0.05)';
   phChart.options.scales.yAxes[0].ticks["min"] = minPh;
   phChart.options.scales.yAxes[0].ticks["max"] = maxPh;
   phChart.update();
