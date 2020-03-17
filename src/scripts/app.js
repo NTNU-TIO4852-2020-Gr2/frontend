@@ -204,14 +204,28 @@ let app = new Vue({
     },
     formatDateTime: function (value) {
       if (value) {
-        return moment(String(value)).format('YYYY-MM-DD HH:mm');
+        return moment(String(value)).format("YYYY-MM-DD HH:mm");
       }
     },
   },
 });
 
+// Update Page URL
 app.updatePageTitle(null);
 
-window.addEventListener('hashchange', function() {
+// Listen for URL device changes
+window.addEventListener("hashchange", function() {
   app.updateDetails();
-}, false);
+});
+
+// Update height when the window is resized
+function updateSidebarHeight() {
+  let sidebar = document.getElementsByClassName("sidebar-sticky")[0];
+  let navbar = document.getElementsByClassName("navbar")[0];
+  let windowHeight = window.innerHeight;
+  let navbarHeight = navbar.offsetHeight;
+  sidebar.style.top = navbarHeight + "px";
+  sidebar.style.height = (windowHeight - navbarHeight) + "px";
+}
+window.addEventListener("load", updateSidebarHeight);
+window.addEventListener("resize", updateSidebarHeight);
