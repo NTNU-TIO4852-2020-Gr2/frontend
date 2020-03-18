@@ -37,6 +37,11 @@ let app = new Vue({
     detailsKey: 1,
     deviceListKey: 1,
     alertsKey: 1,
+    timeRange: {
+      // FIXME Examples
+      begin: "2020-02-01T00:00:00.0+01:00",
+      end: "2020-04-01T00:00:00.0+01:00",
+    },
   },
   computed: {
     devicesFiltered() {
@@ -170,8 +175,7 @@ let app = new Vue({
       let maxPh = null;
       if (device.uuid in app.measurements) {
         Object.values(app.measurements[device.uuid]).forEach(measurement => {
-          let formattedTime = app.$options.filters.formatDateTime(measurement.time);
-          timeValues.unshift(formattedTime);
+          timeValues.unshift(measurement.time);
           phValues.unshift(measurement.ph);
           temperatureValues.unshift(measurement.temperature);
           if (minPh == null || measurement.ph < minPh) {
