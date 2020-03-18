@@ -25,7 +25,7 @@
         </ul>
       </nav>
 
-      <div class="container-fluid pt0">
+      <div v-cloak class="container-fluid pt0">
         <div class="row">
           <!-- Sidebar -->
           <nav class="col-md-3 d-none d-md-block bg-light sidebar">
@@ -97,7 +97,7 @@
             </div>
           </nav>
           <!-- Main pane -->
-          <main v-cloak class="main-container col-md-9 ml-sm-auto" role="main">
+          <main class="main-container col-md-9 ml-sm-auto" role="main">
             <!-- Map -->
             <div class="map-container">
               <div id="map"></div>
@@ -114,56 +114,82 @@
                   </div><!-- .col -->
                 </div><!-- .row -->
                 <!-- Status boxes -->
-                <div class="row status-titles">
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <h6 class="status-title">Nå</h6>
-                  </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <h6 class="status-title">Gjennomsnitt</h6>
-                  </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <h6 class="status-title">Minimum</h6>
-                  </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <h6 class="status-title">Maximum</h6>
-                  </div>
-                </div><!-- .row -->
                 <div class="row status-boxes">
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <div class="status-box good"><h6>pH 4.69</h6></div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col-md-3 col-sm-6">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h6 class="status-title">Nå</h6>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="status-box good"><h6>pH 4.69</h6></div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="status-box good"><h6>21.00 &#176;C</h6></div>
+                      </div>
+                    </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <div class="status-box warning"><h6>21.00 &#176;C</h6></div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col-md-3 col-sm-6">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h6 class="status-title">Gjennomsnitt</h6>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="status-box critical"><h6>pH 4.69</h6></div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="status-box warning"><h6>21.00 &#176;C</h6></div>
+                      </div>
+                    </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <div class="status-box warning"><h6>pH 4.69</h6></div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col-md-3 col-sm-6">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h6 class="status-title">Minimum</h6>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="status-box good"><h6>pH 4.69</h6></div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="status-box critical"><h6>21.00 &#176;C</h6></div>
+                      </div>
+                    </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <div class="status-box good"><h6>21.00 &#176;C</h6></div>
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col-md-3 col-sm-6">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h6 class="status-title">Maximum</h6>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="status-box good"><h6>pH 4.69</h6></div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="status-box warning"><h6>21.00 &#176;C</h6></div>
+                      </div>
+                    </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <div class="status-box warning"><h6>pH 4.69</h6></div>
-                  </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <div class="status-box critical"><h6>21.00 &#176;C</h6></div>
-                  </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <div class="status-box critical"><h6>pH 4.69</h6></div>
-                  </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
-                    <div class="status-box good"><h6>21.00 &#176;C</h6></div>
-                  </div><!-- .col -->
                 </div><!-- .row -->
                 <!-- Charts -->
-                <div class="row charts">
-                  <div v-show="activeDeviceMeasurementsLoaded" class="col charts">
+                <div class="row chart">
+                  <div v-show="activeDeviceMeasurementsLoaded" class="col">
                     <h3>Temperature</h3>
                     <div>
-                      <canvas id="temperature-chart" class="chart"></canvas>
+                      <canvas id="temperature-chart"></canvas>
                     </div>
+                  </div><!-- .col -->
+                </div><!-- .row -->
+                <div class="row chart">
+                  <div v-show="activeDeviceMeasurementsLoaded" class="col">
                     <h3>pH</h3>
                     <div>
-                      <canvas id="ph-chart" class="chart"></canvas>
+                      <canvas id="ph-chart"></canvas>
                     </div>
                   </div><!-- .col -->
                 </div><!-- .row -->

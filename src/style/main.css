@@ -188,13 +188,24 @@ body {
 	opacity: 0;
 }
 
-.details-container .status-titles {
-	margin-bottom: 10px;
+.details-container .status-boxes {
+	
+}
+
+.details-container .status-boxes.row > * {
+	/* Remove grid gutter for outer grid */
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.details-container .status-boxes .row {
+	margin: 0;
 }
 
 .details-container .status-title {
-	padding-bottom: 10px;
-	border-bottom: 5px solid rgba(100, 100, 100);
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	border-bottom: 4px solid rgb(33, 37, 41);
 	text-align: center;
 	text-transform: uppercase;
 }
@@ -227,7 +238,7 @@ body {
 	background-color: rgb(255, 148, 140);;
 }
 
-.details-container .chart {
+.details-container .chart canvas {
 	width: 100% !important;
 	height: 300px !important;
 	padding: 10px 0;
