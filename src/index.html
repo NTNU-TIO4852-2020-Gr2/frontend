@@ -12,6 +12,7 @@
     <link href="style/main.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
   </head>
 
   <body>
@@ -105,7 +106,31 @@
             <!-- Device details -->
             <transition name="details-transition">
               <div v-show="activeDevice" v-cloak class="details-container overflow-auto">
-                <button class="close-button btn btn-light" @click.prevent="closeDetails" title="Close">X</button>
+                <!-- Controls -->
+                <div class="details-control float-right pl5 pr5">
+                  <div class="d-flex">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="time-range-begin-text">Start</span>
+                      </div>
+                      <input type="date" id="time-range-begin-date" v-model="timeRangeBeginDateRaw" class="form-control"
+                          aria-label="Startdato" aria-describedby="time-range-begin-text" />
+                      <input type="time" id="time-range-begin-time" v-model="timeRangeBeginTimeRaw" class="form-control" step="60"
+                          aria-label="Starttid" aria-describedby="time-range-begin-text" />
+                    </div>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="time-range-end-text">Slutt</span>
+                      </div>
+                      <input type="date" id="time-range-end-date" v-model="timeRangeEndDateRaw" class="form-control"
+                          aria-label="Sluttdato" aria-describedby="time-range-end-text" />
+                      <input type="time" id="time-range-end-time" v-model="timeRangeEndTimeRaw" class="form-control" step="60"
+                          aria-label="Sluttid" aria-describedby="time-range-end-text" />
+                    </div>
+                    <button class="close-button btn btn-light" @click.prevent="closeDetails" title="Close"><strong>&times;</strong></button>
+                  </div>
+                  <p class="time-info">{{ timeRangeBegin | formatDateTime }} &ndash; {{ timeRangeEnd | formatDateTime }}</p>
+                </div>
                 <!-- Banner -->
                 <div class="row banner">
                   <div v-if="activeDevice" class="col">

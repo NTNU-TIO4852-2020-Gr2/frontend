@@ -1,7 +1,7 @@
 // Requires config and app
 
 const httpClient = axios.create();
-httpClient.defaults.timeout = config.dataFetchInterval;
+httpClient.defaults.timeout = config.dataFetchInterval * 1000;
 
 function fetchDevices() {
   let endpoint = config.backendRootUrl + config.backendDevicesEndpoint;
@@ -167,4 +167,4 @@ function fetchAlerts() {
 fetchDevices();
 window.setInterval(function () {
   fetchDevices();
-}, config.dataFetchInterval);
+}, config.dataFetchInterval * 1000);

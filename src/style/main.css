@@ -163,17 +163,30 @@ body {
 	margin-bottom: 30px;
 }
 
-.details-container .close-button {
-	position: absolute;
-	top: 20px;
-	right: 20px;
-	z-index: 20;
-	background-color: #eee;
-}
-
 .details-container .spinner-container {
 	margin: 4em 0;
 	text-align: center;
+}
+
+.details-container .details-control > .d-flex > * {
+	margin: 0 10px;
+}
+
+.details-container .details-control > .d-flex > *:first-child {
+	margin-left: 0;
+}
+
+.details-container .details-control > .d-flex > *:last-child {
+	margin-right: 0;
+}
+
+.details-container .details-control .input-group {
+	width: 400px;
+}
+
+.details-container .details-control .time-info {
+	margin-top: 20px;
+	text-align: right;
 }
 
 .details-container .banner {

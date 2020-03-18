@@ -38,11 +38,11 @@ let app = new Vue({
     deviceListUpdateKey: 0,
     alertsUpdateKey: 0,
     activeDeviceMeasurementsUpdateKey: 0,
-    timeRange: {
-      // FIXME Examples
-      begin: "2020-02-01T00:00:00.0+01:00",
-      end: "2020-04-01T00:00:00.0+01:00",
-    },
+    timeRangeUpdateKey: 0,
+    timeRangeBeginDateRaw: "",
+    timeRangeBeginTimeRaw: "",
+    timeRangeEndDateRaw: "",
+    timeRangeEndTimeRaw: "",
   },
   computed: {
     devicesFiltered() {
@@ -59,6 +59,52 @@ let app = new Vue({
     },
     alertCount() {
       return Object.keys(this.alerts).length;
+    },
+    timeRangeBegin() {
+      // Force update every time tick
+      this.timeRangeUpdateKey;
+
+      let rawDate = this.timeRangeBeginDateRaw;
+      let rawTime = this.timeRangeBeginTimeRaw;
+      let datetime = null;
+      if (rawDate && rawTime) {
+        datetime = moment(rawDate + " " + rawTime);
+      } else if (rawDate) {
+        datetime = moment(rawDate);
+      } else if (rawTime) {
+        datetime = moment(rawTime, ['HH:mm']);
+      } else {
+        datetime = moment();
+      }
+
+      // Default to one month ago and 24 hours ago if date/time not specified
+      if (!rawDate) {
+        datetime.subtract(1, 'months');
+      }
+      if (!rawTime) {
+        datetime.subtract(24, 'hours');
+      }
+
+      return datetime.format();
+    },
+    timeRangeEnd() {
+      // Force update every time tick
+      this.timeRangeUpdateKey;
+      
+      let rawDate = this.timeRangeEndDateRaw;
+      let rawTime = this.timeRangeEndTimeRaw;
+      let datetime = null;
+      if (rawDate && rawTime) {
+        datetime = moment(rawDate + " " + rawTime);
+      } else if (rawDate) {
+        datetime = moment(rawDate);
+      } else if (rawTime) {
+        datetime = moment(rawTime, ['HH:mm']);
+      } else {
+        datetime = moment();
+      }
+
+      return datetime.format();
     },
     parsedActiveMeasurements() {
       // Force recompute on measurements update
@@ -78,8 +124,8 @@ let app = new Vue({
       if (device && device.uuid in this.measurements) {
         Object.values(this.measurements[device.uuid]).forEach(measurement => {
           // Skip if out of time range
-          if (moment(measurement.time).isBefore(this.timeRange.begin)
-              || moment(measurement.time).isAfter(this.timeRange.end)) {
+          if (moment(measurement.time).isBefore(this.timeRangeBegin)
+              || moment(measurement.time).isAfter(this.timeRangeEnd)) {
             return;
           }
 
@@ -141,6 +187,18 @@ let app = new Vue({
     devices(val) {
       this.updateDetails();
     },
+    timeRangeBeginDateRaw(val) {
+      this.postUpdateTimeRange();
+    },
+    timeRangeBeginTimeRaw(val) {
+      this.postUpdateTimeRange();
+    },
+    timeRangeEndDateRaw(val) {
+      this.postUpdateTimeRange();
+    },
+    timeRangeEndTimeRaw(val) {
+      this.postUpdateTimeRange();
+    },
   },
   methods: {
     updatePageTitle(subtitle) {
@@ -201,6 +259,9 @@ let app = new Vue({
     },
     updateMapDevices() {
       window["updateMapDevices"]();
+    },
+    postUpdateTimeRange() {
+      this.drawDeviceCharts();
     },
     drawDeviceCharts() {
       window["drawDeviceCharts"]();
@@ -265,7 +326,7 @@ let app = new Vue({
     },
     formatDateTime(value) {
       if (value) {
-        return moment(String(value)).format("YYYY-MM-DD HH:mm");
+        return moment(String(value)).format("YYYY-MM-DD HH:mm:ss");
       } else {
         return "?";
       }
@@ -292,3 +353,9 @@ function updateSidebarHeight() {
 }
 window.addEventListener("load", updateSidebarHeight);
 window.addEventListener("resize", updateSidebarHeight);
+
+// Periodically update time range
+window.setInterval(function () {
+  app.timeRangeUpdateKey++;
+  app.postUpdateTimeRange();
+}, config.timeRangeUpdateInterval * 1000);

@@ -127,15 +127,15 @@ function drawDeviceCharts() {
 
   phChart.data.labels = values.timeValues;
   phChart.data.datasets[0].data = values.phValues;
-  phChart.options.scales.xAxes[0].ticks["min"] = app.timeRange.begin;
-  phChart.options.scales.xAxes[0].ticks["max"] = app.timeRange.end;
+  phChart.options.scales.xAxes[0].ticks["min"] = app.timeRangeBegin;
+  phChart.options.scales.xAxes[0].ticks["max"] = app.timeRangeEnd;
   phChart.options.scales.yAxes[0].ticks["min"] = minPh;
   phChart.options.scales.yAxes[0].ticks["max"] = maxPh;
   phChart.update();
 
   temperatureChart.data.labels = values.timeValues;
   temperatureChart.data.datasets[0].data = values.temperatureValues;
-  temperatureChart.options.scales.xAxes[0].ticks["min"] = app.timeRange.begin;
-  temperatureChart.options.scales.xAxes[0].ticks["max"] = app.timeRange.end;
+  temperatureChart.options.scales.xAxes[0].ticks["min"] = app.timeRangeBegin;
+  temperatureChart.options.scales.xAxes[0].ticks["max"] = app.timeRangeEnd;
   temperatureChart.update();
 }

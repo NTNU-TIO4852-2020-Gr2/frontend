@@ -17,3 +17,9 @@ Using plain HTML, JS and CSS with Vue.js and Bootstrap (none of that fancy magic
 - [Development](docs/development.md)
 - [Deployment](docs/deployment.md)
 - [Docker Image](docs/docker-image.md)
+
+## TODO
+
+Since this is a prototype, we'll probably not add/fix any of this.
+
+- Fetch relevant measurements when needed, not all measurements periodically.
