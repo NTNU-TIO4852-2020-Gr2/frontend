@@ -114,7 +114,7 @@ function drawDeviceCharts() {
     temperatureChart = new Chart(temperatureCanvas.getContext("2d"), temperatureChartOptions);
   }
 
-  let values = app.parseMeasurements(app.activeDevice);
+  let values = app.parsedActiveMeasurements;
 
   let minPh = CHART_MIN_PH;
   if (values.minPh && values.minPh > CHART_MIN_PH) {

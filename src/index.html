@@ -32,7 +32,7 @@
             <div class="sidebar-sticky">
               <!-- Alerts -->
               <div class="alerts-container">
-                <div :key="alertsKey">
+                <div :key="alertsUpdateKey">
                   <!--
                   <ul class="alerts-status nav flex-column">
                     <li class="nav-item">
@@ -70,7 +70,7 @@
               </div>
               <!-- Devices -->
               <div class="device-list-container overflow-auto">
-                <div :key="deviceListKey">
+                <div :key="deviceListUpdateKey">
                   <h6 class="nav-heading">Devices</h6>
                   <div class="input-group nav-item">
                     <input type="text" v-model="deviceFilter" class="form-control" placeholder="Filter" aria-label="Device filter">
@@ -115,7 +115,7 @@
                 </div><!-- .row -->
                 <!-- Status boxes -->
                 <div class="row status-boxes">
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col-md-3 col-sm-6">
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
                     <div class="row">
                       <div class="col-md-12">
                         <h6 class="status-title">Nå</h6>
@@ -123,14 +123,14 @@
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <div class="status-box good"><h6>pH 4.69</h6></div>
+                        <div class="status-box good"><h6>{{ lastMeasurementForDevice(activeDevice).ph | formatPh }}</h6></div>
                       </div>
                       <div class="col-md-6">
-                        <div class="status-box good"><h6>21.00 &#176;C</h6></div>
+                        <div class="status-box good"><h6>{{ lastMeasurementForDevice(activeDevice).temperature | formatTemperature }}</h6></div>
                       </div>
                     </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col-md-3 col-sm-6">
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
                     <div class="row">
                       <div class="col-md-12">
                         <h6 class="status-title">Gjennomsnitt</h6>
@@ -138,14 +138,14 @@
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <div class="status-box critical"><h6>pH 4.69</h6></div>
+                        <div class="status-box good"><h6>{{ parsedActiveMeasurements.averagePh | formatPh }}</h6></div>
                       </div>
                       <div class="col-md-6">
-                        <div class="status-box warning"><h6>21.00 &#176;C</h6></div>
+                        <div class="status-box good"><h6>{{ parsedActiveMeasurements.averageTemperature | formatTemperature }}</h6></div>
                       </div>
                     </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col-md-3 col-sm-6">
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
                     <div class="row">
                       <div class="col-md-12">
                         <h6 class="status-title">Minimum</h6>
@@ -153,14 +153,14 @@
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <div class="status-box good"><h6>pH 4.69</h6></div>
+                        <div class="status-box good"><h6>{{ parsedActiveMeasurements.minPh | formatPh }}</h6></div>
                       </div>
                       <div class="col-md-6">
-                        <div class="status-box critical"><h6>21.00 &#176;C</h6></div>
+                        <div class="status-box good"><h6>{{ parsedActiveMeasurements.minTemperature | formatTemperature }}</h6></div>
                       </div>
                     </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col-md-3 col-sm-6">
+                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
                     <div class="row">
                       <div class="col-md-12">
                         <h6 class="status-title">Maximum</h6>
@@ -168,10 +168,10 @@
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <div class="status-box good"><h6>pH 4.69</h6></div>
+                        <div class="status-box good"><h6>{{ parsedActiveMeasurements.maxPh | formatPh }}</h6></div>
                       </div>
                       <div class="col-md-6">
-                        <div class="status-box warning"><h6>21.00 &#176;C</h6></div>
+                        <div class="status-box good"><h6>{{ parsedActiveMeasurements.maxTemperature | formatTemperature }}</h6></div>
                       </div>
                     </div>
                   </div>
@@ -195,7 +195,7 @@
                 </div><!-- .row -->
                 <!-- Spinners -->
                 <div class="row">
-                  <div v-if="activeDevice && measurementsLoadingStatus(activeDevice.uuid) != 'finished'" class="col spinner-container">
+                  <div v-if="!activeDeviceMeasurementsLoaded" class="col spinner-container">
                     <div v-if="measurementsLoadingStatus(activeDevice.uuid) == 'loading'" v-cloak class="spinner-border text-dark" role="status">
                       <span class="sr-only">Loading...</span>
                     </div>

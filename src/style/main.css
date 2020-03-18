@@ -188,10 +188,6 @@ body {
 	opacity: 0;
 }
 
-.details-container .status-boxes {
-	
-}
-
 .details-container .status-boxes.row > * {
 	/* Remove grid gutter for outer grid */
 	padding-left: 0;

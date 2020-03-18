@@ -67,6 +67,9 @@ function fetchDeviceMeasurements(endpoint, deviceUuid) {
     .then(response => {
       parseMeasurementData(deviceUuid, response.data);
       app.measurementsLoadingStatuses[deviceUuid] = LOADING_STATUS_FINISHED;
+      if (app.activeDevice && app.activeDevice.uuid == deviceUuid) {
+        app.activeDeviceMeasurementsUpdateKey++;
+      }
     })
     .catch(error => {
       parseMeasurementData(deviceUuid, {});

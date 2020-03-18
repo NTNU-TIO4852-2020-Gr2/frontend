@@ -34,9 +34,10 @@ let app = new Vue({
     mapMarkers: {},
     activeDevice: null,
     deviceFilter: null,
-    detailsKey: 1,
-    deviceListKey: 1,
-    alertsKey: 1,
+    detailsUpdateKey: 0,
+    deviceListUpdateKey: 0,
+    alertsUpdateKey: 0,
+    activeDeviceMeasurementsUpdateKey: 0,
     timeRange: {
       // FIXME Examples
       begin: "2020-02-01T00:00:00.0+01:00",
@@ -45,40 +46,111 @@ let app = new Vue({
   },
   computed: {
     devicesFiltered() {
-      return Object.fromEntries(Object.entries(app.devices).filter(([uuid, device]) => {
-        if (!app.deviceFilter) {
+      return Object.fromEntries(Object.entries(this.devices).filter(([uuid, device]) => {
+        if (!this.deviceFilter) {
           return true;
         }
-        return device.name.toLowerCase().indexOf(app.deviceFilter.toLowerCase()) > -1
-          || device.uuid.toLowerCase().indexOf(app.deviceFilter.toLowerCase()) > -1;
+        return device.name.toLowerCase().indexOf(this.deviceFilter.toLowerCase()) > -1
+          || device.uuid.toLowerCase().indexOf(this.deviceFilter.toLowerCase()) > -1;
       }));
     },
-    alertCount: function() {
-      return Object.keys(app.alerts).length;
+    alertCount() {
+      return Object.keys(this.alerts).length;
+    },
+    parsedActiveMeasurements() {
+      // Force recompute on measurements update
+      this.activeDeviceMeasurementsUpdateKey;
+
+      let count = 0;
+      let timeValues = [];
+      let phValues = [];
+      let temperatureValues = [];
+      let minPh = null;
+      let maxPh = null;
+      let averagePh = null;
+      let minTemperature = null;
+      let maxTemperature = null;
+      let averageTemperature = null;
+      let device = this.activeDevice;
+      if (device && device.uuid in this.measurements) {
+        Object.values(this.measurements[device.uuid]).forEach(measurement => {
+          // TODO filter measurements wrt. time range
+          count++;
+          timeValues.unshift(measurement.time);
+          phValues.unshift(measurement.ph);
+          temperatureValues.unshift(measurement.temperature);
+          // pH
+          if (measurement.ph != null) {
+            if (minPh == null || measurement.ph < minPh) {
+              minPh = measurement.ph;
+            }
+            if (maxPh == null || measurement.ph > maxPh) {
+              maxPh = measurement.ph;
+            }
+            if (averagePh == null) {
+              averagePh = measurement.ph;
+            } else {
+              averagePh += measurement.ph;
+            }
+          }
+          // Temperature
+          if (measurement.temperature != null) {
+            if (minTemperature == null || measurement.temperature < minTemperature) {
+              minTemperature = measurement.temperature;
+            }
+            if (maxTemperature == null || measurement.temperature > maxTemperature) {
+              maxTemperature = measurement.temperature;
+            }
+            if (averageTemperature == null) {
+              averageTemperature = measurement.temperature;
+            } else {
+              averageTemperature += measurement.temperature;
+            }
+          }
+        });
+        if (averagePh != null) {
+          averagePh /= count;
+        }
+        if (averageTemperature != null) {
+          averageTemperature /= count;
+        }
+      }
+      return {
+        "count": count,
+        "timeValues": timeValues,
+        "phValues": phValues,
+        "temperatureValues": temperatureValues,
+        "minPh": minPh,
+        "maxPh": maxPh,
+        "averagePh": averagePh,
+        "minTemperature": minTemperature,
+        "maxTemperature": maxTemperature,
+        "averageTemperature": averageTemperature,
+      };
     },
   },
   watch: {
-    devices: function(val) {
-      app.updateDetails();
+    devices(val) {
+      this.updateDetails();
     },
   },
   methods: {
-    updatePageTitle: function(subtitle) {
+    updatePageTitle(subtitle) {
       if (subtitle) {
-        document.title = app.siteTitle + " | " + subtitle;
+        document.title = this.siteTitle + " | " + subtitle;
       } else {
-        document.title = app.siteTitle;
+        document.title = this.siteTitle;
       }
     },
-    updateDetails: function() {
+    updateDetails() {
       let uuid = location.hash.replace("#", "");
-      if (uuid && uuid in app.devices) {
-        app.openDetails(uuid);
+      if (uuid && uuid in this.devices) {
+        this.openDetails(uuid);
       } else {
-        app.closeDetails(false);
+        this.closeDetails(false);
       }
     },
-    openDetails: function(deviceOrUuid) {
+    openDetails(deviceOrUuid) {
       let uuid = null;
       if (typeof deviceOrUuid === "object")
         uuid = deviceOrUuid.uuid;
@@ -86,58 +158,58 @@ let app = new Vue({
         uuid = deviceOrUuid;
       
       // Open details
-      let device = app.devices[uuid];
-      app.activeDevice = device;
+      let device = this.devices[uuid];
+      this.activeDevice = device;
       location.hash = uuid;
-      app.updatePageTitle(app.friendlyDeviceName(device));
-      app.drawDeviceCharts();
+      this.updatePageTitle(this.friendlyDeviceName(device));
+      this.drawDeviceCharts();
 
       // Exit fullscreen
       if (document.fullscreenElement) {
         document.exitFullscreen();
       }
     },
-    closeDetails: function(clearUrl=true) {
-      app.activeDevice = null;
+    closeDetails(clearUrl=true) {
+      this.activeDevice = null;
       if (clearUrl) {
         location.hash = "";
       }
-      app.updatePageTitle(null);
+      this.updatePageTitle(null);
     },
-    postUpdateDevices: function() {
-      app.deviceListKey++;
-      app.updateMapDevices();
+    postUpdateDevices() {
+      this.deviceListUpdateKey++;
+      this.updateMapDevices();
     },
-    postUpdateMeasurements: function(deviceUuid=null) {
-      app.deviceListKey++;
-      let isForActiveDevice = deviceUuid && app.activeDevice && deviceUuid === app.activeDevice.uuid;
+    postUpdateMeasurements(deviceUuid=null) {
+      this.deviceListUpdateKey++;
+      let isForActiveDevice = deviceUuid && this.activeDevice && deviceUuid === this.activeDevice.uuid;
       if (isForActiveDevice)  {
-        //app.detailsKey++;
-        app.drawDeviceCharts();
+        //this.detailsUpdateKey++;
+        this.drawDeviceCharts();
       }
     },
-    postUpdateAlerts: function() {
-      //app.alertsKey++;
+    postUpdateAlerts() {
+      //this.alertsUpdateKey++;
     },
-    updateMapDevices: function() {
+    updateMapDevices() {
       window["updateMapDevices"]();
     },
-    drawDeviceCharts: function() {
+    drawDeviceCharts() {
       window["drawDeviceCharts"]();
     },
-    friendlyDeviceName: function(device) {
+    friendlyDeviceName(device) {
       return device.name ? device.name : device.uuid;
     },
-    measurementsLoadingStatus: function(deviceUuid) {
-      if (!(deviceUuid in app.measurementsLoadingStatuses)) {
+    measurementsLoadingStatus(deviceUuid) {
+      if (!(deviceUuid in this.measurementsLoadingStatuses)) {
         return LOADING_STATUS_LOADING;
       }
-      return app.measurementsLoadingStatuses[deviceUuid];
+      return this.measurementsLoadingStatuses[deviceUuid];
     },
-    activeDeviceMeasurementsLoaded: function() {
-      return app.activeDevice && app.measurementsLoadingStatus(activeDevice.uuid) == LOADING_STATUS_FINISHED;
+    activeDeviceMeasurementsLoaded() {
+      return this.activeDevice && this.measurementsLoadingStatus(activeDevice.uuid) == LOADING_STATUS_FINISHED;
     },
-    alertSeverityCssClass: function(severity) {
+    alertSeverityCssClass(severity) {
       switch(severity) {
         case "info":
           return "alert-primary";
@@ -149,7 +221,7 @@ let app = new Vue({
           return "alert-dark";
       }
     },
-    alertSeverityVerbose: function(severity) {
+    alertSeverityVerbose(severity) {
       switch(severity) {
         case "info":
           return "Info";
@@ -161,54 +233,33 @@ let app = new Vue({
           return "Unknown";
       }
     },
-    lastMeasurementForDevice: function(device) {
-      if (device.uuid in app.lastMeasurements) {
-        return app.lastMeasurements[device.uuid];
+    lastMeasurementForDevice(device) {
+      if (device && device.uuid in this.lastMeasurements) {
+        return this.lastMeasurements[device.uuid];
       }
       return EMPTY_MEASUREMENT;
     },
-    parseMeasurements: function(device) {
-      let timeValues = [];
-      let phValues = [];
-      let temperatureValues = [];
-      let minPh = null;
-      let maxPh = null;
-      if (device.uuid in app.measurements) {
-        Object.values(app.measurements[device.uuid]).forEach(measurement => {
-          timeValues.unshift(measurement.time);
-          phValues.unshift(measurement.ph);
-          temperatureValues.unshift(measurement.temperature);
-          if (minPh == null || measurement.ph < minPh) {
-            minPh = measurement.ph;
-          }
-          if (maxPh == null || measurement.ph > maxPh) {
-            maxPh = measurement.ph;
-          }
-        });
-      }
-      return {
-        "timeValues": timeValues,
-        "phValues": phValues,
-        "temperatureValues": temperatureValues,
-        "minPh": minPh,
-        "maxPh": maxPh,
-      };
-    }
   },
   filters: {
-    formatPh: function (value) {
+    formatPh(value) {
       if (value) {
         return "pH " + value.toFixed(2);
+      } else {
+        return "?";
       }
     },
-    formatTemperature: function (value) {
+    formatTemperature(value) {
       if (value) {
         return value.toFixed(2) + "\u2103";
+      } else {
+        return "?";
       }
     },
-    formatDateTime: function (value) {
+    formatDateTime(value) {
       if (value) {
         return moment(String(value)).format("YYYY-MM-DD HH:mm");
+      } else {
+        return "?";
       }
     },
   },
