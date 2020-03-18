@@ -28,7 +28,6 @@ addScript("Popper.js", "https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/p
 addScript("Bootstrap", "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js", "sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6", "anonymous");
 addScript("Google Maps", "https://maps.googleapis.com/maps/api/js?key=" + config.googleMapsApiKey);
 addScript("Chart.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js")
-addScript("Moment.js", "lib/moment.min.js");
 
 // App
 addScript("App", "scripts/app.js");

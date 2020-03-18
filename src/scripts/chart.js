@@ -30,7 +30,7 @@ const phChartOptions = {
           bounds: "ticks",
           unit: "hour",
           displayFormats: {
-            hour: "YYYY-MM-DD HH:MM",
+            hour: "YYYY-MM-DD HH:mm",
           },
         },
         ticks: {
@@ -77,7 +77,7 @@ const temperatureChartOptions = {
           bounds: "ticks",
           unit: "hour",
           displayFormats: {
-            hour: "YYYY-MM-DD HH:MM",
+            hour: "YYYY-MM-DD HH:mm",
           },
         },
         ticks: {
