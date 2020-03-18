@@ -54,6 +54,9 @@ let app = new Vue({
           || device.uuid.toLowerCase().indexOf(this.deviceFilter.toLowerCase()) > -1;
       }));
     },
+    deviceCount() {
+      return Object.keys(this.devices).length;
+    },
     alertCount() {
       return Object.keys(this.alerts).length;
     },
@@ -74,7 +77,12 @@ let app = new Vue({
       let device = this.activeDevice;
       if (device && device.uuid in this.measurements) {
         Object.values(this.measurements[device.uuid]).forEach(measurement => {
-          // TODO filter measurements wrt. time range
+          // Skip if out of time range
+          if (moment(measurement.time).isBefore(this.timeRange.begin)
+              || moment(measurement.time).isAfter(this.timeRange.end)) {
+            return;
+          }
+
           count++;
           timeValues.unshift(measurement.time);
           phValues.unshift(measurement.ph);
