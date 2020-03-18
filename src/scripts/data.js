@@ -125,7 +125,9 @@ function fetchAlerts() {
   }
 
   let endpoint = config.backendRootUrl + config.backendAlertsEndpoint;
-  // FIXME dummy data
+  // TODO
+  // Dummy data
+  /*
   app.alerts = {
     "0": {
       "id": "0",
@@ -134,6 +136,7 @@ function fetchAlerts() {
       "message": "Some value out of range.",
     },
   };
+  */
   /*app.alerts = {
     "0": {
       "id": "0",
