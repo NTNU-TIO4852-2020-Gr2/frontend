@@ -32,6 +32,7 @@ let app = new Vue({
     alertsLoadingStatus: LOADING_STATUS_LOADING,
     map: null,
     mapMarkers: {},
+    activeDeviceUuid: null,
     activeDevice: null,
     deviceFilter: null,
     detailsUpdateKey: 0,
@@ -77,11 +78,12 @@ let app = new Vue({
         datetime = moment();
       }
 
-      // Default to one month ago and 24 hours ago if date/time not specified
+      // Default to one month ago if no date specified
       if (!rawDate) {
         datetime.subtract(1, 'months');
       }
-      if (!rawTime) {
+      // Default to 00:00 if neither date nor time was specified
+      if (!rawDate && !rawTime) {
         datetime.subtract(24, 'hours');
       }
 
@@ -208,39 +210,103 @@ let app = new Vue({
         document.title = this.siteTitle;
       }
     },
+    buildUrlFragment() {
+      let fragment = "";
+      if (this.activeDeviceUuid) {
+        fragment += "&uuid=" + this.activeDeviceUuid;
+      }
+      if (this.timeRangeBeginDateRaw) {
+        fragment += "&timeBeginDate=" + this.timeRangeBeginDateRaw;
+      }
+      if (this.timeRangeBeginTimeRaw) {
+        fragment += "&timeBeginTime=" + this.timeRangeBeginTimeRaw;
+      }
+      if (this.timeRangeEndDateRaw) {
+        fragment += "&timeEndDate=" + this.timeRangeEndDateRaw;
+      }
+      if (this.timeRangeEndTimeRaw) {
+        fragment += "&timeEndTime=" + this.timeRangeEndTimeRaw;
+      }
+
+      if (fragment && fragment.startsWith("&")) {
+        fragment = fragment.substring(1, fragment.length);
+      }
+      location.hash = "#" + fragment;
+    },
+    parseUrlFragment() {
+      let fragment = location.hash.replace("#", "");
+      let newActiveDeviceUuid = null;
+      let newTimeRangeBeginDateRaw = null;
+      let newTimeRangeBeginTimeRaw = null;
+      let newTimeRangeEndDateRaw = null;
+      let newTimeRangeEndTimeRaw = null;
+
+      fragment.split("&").forEach(function(param) {
+        let entry = param.split("=");
+        if (entry.length != 2) {
+          return;
+        }
+        let key = entry[0];
+        let value = entry[1];
+
+        if (key == "uuid") {
+          newActiveDeviceUuid = value;
+        } else if (key == "timeBeginDate") {
+          newTimeRangeBeginDateRaw = value;
+        } else if (key == "timeBeginTime") {
+          newTimeRangeBeginTimeRaw = value;
+        } else if (key == "timeEndDate") {
+          newTimeRangeEndDateRaw = value;
+        } else if (key == "timeEndTime") {
+          newTimeRangeEndTimeRaw = value;
+        }
+      });
+
+      this.activeDeviceUuid = newActiveDeviceUuid;
+      this.timeRangeBeginDateRaw = newTimeRangeBeginDateRaw;
+      this.timeRangeBeginTimeRaw = newTimeRangeBeginTimeRaw;
+      this.timeRangeEndDateRaw = newTimeRangeEndDateRaw;
+      this.timeRangeEndTimeRaw = newTimeRangeEndTimeRaw;
+    },
     updateDetails() {
-      let uuid = location.hash.replace("#", "");
+      // Show/hide details if the devices or URL fragment changed
+      app.parseUrlFragment();
+      let uuid = this.activeDeviceUuid;
+
       if (uuid && uuid in this.devices) {
-        this.openDetails(uuid);
+        if (!this.activeDevice || this.activeDevice.uuid != uuid) {
+          let device = this.devices[uuid];
+          this.activeDevice = device;
+          this.updatePageTitle(this.friendlyDeviceName(device));
+          this.drawDeviceCharts();
+          // Exit fullscreen
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          }
+        }
       } else {
-        this.closeDetails(false);
+        if (this.activeDevice) {
+          this.activeDevice = null;
+          this.updatePageTitle(null);
+        }
       }
     },
     openDetails(deviceOrUuid) {
       let uuid = null;
-      if (typeof deviceOrUuid === "object")
+      if (typeof deviceOrUuid === "object") {
         uuid = deviceOrUuid.uuid;
-      else
+      } else {
         uuid = deviceOrUuid;
-      
-      // Open details
-      let device = this.devices[uuid];
-      this.activeDevice = device;
-      location.hash = uuid;
-      this.updatePageTitle(this.friendlyDeviceName(device));
-      this.drawDeviceCharts();
+      }
 
-      // Exit fullscreen
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      }
+      this.activeDeviceUuid = uuid;
+      this.buildUrlFragment();
+      this.updateDetails();
     },
-    closeDetails(clearUrl=true) {
-      this.activeDevice = null;
-      if (clearUrl) {
-        location.hash = "";
-      }
-      this.updatePageTitle(null);
+    closeDetails() {
+      this.activeDeviceUuid = null;
+      this.buildUrlFragment();
+      this.updateDetails();
     },
     postUpdateDevices() {
       this.deviceListUpdateKey++;
@@ -261,10 +327,14 @@ let app = new Vue({
       window["updateMapDevices"]();
     },
     postUpdateTimeRange() {
+      this.buildUrlFragment();
       this.drawDeviceCharts();
     },
     drawDeviceCharts() {
-      window["drawDeviceCharts"]();
+      let drawDeviceCharts = window["drawDeviceCharts"];
+      if (drawDeviceCharts) {
+        drawDeviceCharts();
+      }
     },
     friendlyDeviceName(device) {
       return device.name ? device.name : device.uuid;
@@ -336,6 +406,9 @@ let app = new Vue({
 
 // Update Page URL
 app.updatePageTitle(null);
+
+// Parse initial URL fragment
+app.parseUrlFragment();
 
 // Listen for URL device changes
 window.addEventListener("hashchange", function() {

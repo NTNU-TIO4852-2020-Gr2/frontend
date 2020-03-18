@@ -190,11 +190,16 @@ body {
 }
 
 .details-container .banner {
+	margin-top: 20px;
 	margin-bottom: 20px;
 }
 
-.details-transition-enter-active, .details-transition-leave-active {
+.details-transition-enter-active {
 	transition: opacity .25s;
+}
+
+.details-transition-leave-active {
+	transition: opacity .10s;
 }
 
 .details-transition-enter, .details-transition-leave-to {

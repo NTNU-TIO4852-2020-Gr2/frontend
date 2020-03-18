@@ -57,7 +57,7 @@
                       <li v-for="alert in alerts" :key="alert.id" v-cloak class="nav-item">
                         <div class="alert" :class="alertSeverityCssClass(alert.severity)" role="alert">
                           <strong>{{ alertSeverityVerbose(alert.severity) }}:</strong>
-                          <a :href="`#${alert.device}`" class="alert-link">
+                          <a :href="`#uuid=${alert.device}`" @click.prevent="openDetails(alert.device)" class="alert-link">
                             <span v-if="alert.device in devices">{{ friendlyDeviceName(devices[alert.device]) }}</span>
                             <span v-else>{{ alert.device }}</span>
                           </a>
@@ -78,7 +78,7 @@
                   </div>
                   <ul v-if="devicesLoadingStatus == 'finished'" v-cloak class="nav flex-column">
                     <li v-for="device in devicesFiltered" :key="device.uuid" v-cloak class="device-list-device nav-item">
-                      <a class="nav-link" :href="`#${device.uuid}`">
+                      <a class="nav-link" :href="`#uuid=${device.uuid}`" @click.prevent="openDetails(device.uuid)">
                         <span class="device-name">{{ friendlyDeviceName(device) }}</span>
                         <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).ph | formatPh }}</span>
                         <span class="device-status badge badge-light float-right">{{ lastMeasurementForDevice(device).temperature | formatTemperature }}</span>
@@ -140,7 +140,7 @@
                 </div><!-- .row -->
                 <!-- Status boxes -->
                 <div class="row status-boxes">
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                  <div v-if="activeDevice && activeDeviceMeasurementsLoaded" class="col">
                     <div class="row">
                       <div class="col-md-12">
                         <h6 class="status-title">Nå</h6>
@@ -155,7 +155,7 @@
                       </div>
                     </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                  <div v-if="activeDevice && activeDeviceMeasurementsLoaded" class="col">
                     <div class="row">
                       <div class="col-md-12">
                         <h6 class="status-title">Gjennomsnitt</h6>
@@ -170,7 +170,7 @@
                       </div>
                     </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                  <div v-if="activeDevice && activeDeviceMeasurementsLoaded" class="col">
                     <div class="row">
                       <div class="col-md-12">
                         <h6 class="status-title">Minimum</h6>
@@ -185,7 +185,7 @@
                       </div>
                     </div>
                   </div>
-                  <div v-if="activeDeviceMeasurementsLoaded" class="col">
+                  <div v-if="activeDevice && activeDeviceMeasurementsLoaded" class="col">
                     <div class="row">
                       <div class="col-md-12">
                         <h6 class="status-title">Maximum</h6>
