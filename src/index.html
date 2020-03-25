@@ -72,7 +72,7 @@
               <!-- Devices -->
               <div class="device-list-container overflow-auto">
                 <div :key="deviceListUpdateKey">
-                  <h6 class="nav-heading">Devices ({{ deviceCount }})</h6>
+                  <h6 class="nav-heading">Enheter ({{ deviceCount }})</h6>
                   <div class="input-group nav-item">
                     <input type="text" v-model="deviceFilter" class="form-control" placeholder="Filter" aria-label="Device filter">
                   </div>
@@ -87,10 +87,10 @@
                   </ul>
                   <div v-else class="spinner-container">
                     <div v-if="devicesLoadingStatus == 'loading'" v-cloak class="spinner-border" role="status">
-                      <span class="sr-only">Loading...</span>
+                      <span class="sr-only">Laster ...</span>
                     </div>
                     <div v-else v-cloak class="spinner-border text-danger" role="status">
-                      <span class="sr-only">Loading...</span>
+                      <span class="sr-only">Laster ...</span>
                     </div>
                   </div>
                 </div>
@@ -204,7 +204,7 @@
                 <!-- Charts -->
                 <div class="row chart">
                   <div v-show="activeDeviceMeasurementsLoaded" class="col">
-                    <h3>pH</h3>
+                    <h3>pH-verdi</h3>
                     <div>
                       <canvas id="ph-chart"></canvas>
                     </div>
@@ -212,7 +212,7 @@
                 </div><!-- .row -->
                 <div class="row chart">
                   <div v-show="activeDeviceMeasurementsLoaded" class="col">
-                    <h3>Temperature</h3>
+                    <h3>Temperatur</h3>
                     <div>
                       <canvas id="temperature-chart"></canvas>
                     </div>
@@ -222,10 +222,10 @@
                 <div class="row">
                   <div v-if="!activeDeviceMeasurementsLoaded" class="col spinner-container">
                     <div v-if="measurementsLoadingStatus(activeDevice.uuid) == 'loading'" v-cloak class="spinner-border text-dark" role="status">
-                      <span class="sr-only">Loading...</span>
+                      <span class="sr-only">Laster ...</span>
                     </div>
                     <div v-else class="spinner-border text-danger" v-cloak role="status">
-                      <span class="sr-only">Loading...</span>
+                      <span class="sr-only">Laster ...</span>
                     </div>
                   </div><!-- .col -->
                 </div><!-- .row -->

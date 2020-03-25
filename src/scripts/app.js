@@ -365,11 +365,11 @@ let app = new Vue({
         case "info":
           return "Info";
         case "warning":
-          return "Warning";
+          return "Varsel";
         case "critical":
-          return "Critical";
+          return "Kritisk";
         default:
-          return "Unknown";
+          return "Ukjent";
       }
     },
     lastMeasurementForDevice(device) {

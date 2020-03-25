@@ -8,7 +8,7 @@ const phChartOptions = {
   data: {
     labels: [],
     datasets: [{
-        label: "pH",
+        label: "pH-verdi",
         backgroundColor: "rgb(0, 0, 0, 0.0)",
         borderColor: "rgb(150, 0, 150)",
         data: [],
@@ -51,7 +51,7 @@ const temperatureChartOptions = {
   data: {
     labels: [],
     datasets: [{
-        label: "Temperature (\u2103)",
+        label: "Temperatur (\u2103)",
         backgroundColor: "rgb(0, 0, 0, 0.0)",
         borderColor: "rgb(0, 150, 150)",
         data: [],
@@ -71,9 +71,6 @@ const temperatureChartOptions = {
         type: "time",
         time: {
           bounds: "ticks",
-        },
-        ticks: {
-          maxTicksLimit: 20,
         },
       }],
       yAxes: [{
