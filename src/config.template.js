@@ -13,9 +13,9 @@ const config = {
     // Backend
     backendRootUrl: "http://localhost:9001/v0/",
     backendRootUrlFriendly: "http://localhost:9001/",
-    backendDevicesEndpoint: "devices",
-    backendMeasurementsEndpoint: "measurements",
-    backendAlertsEndpoint: "alerts",
+    backendDevicesEndpoint: "devices/",
+    backendMeasurementsEndpoint: "measurements/",
+    backendAlertsEndpoint: "alerts/",
 
     // Google Maps
     googleMapsApiKey: "",
