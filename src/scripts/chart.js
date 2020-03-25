@@ -72,6 +72,9 @@ const temperatureChartOptions = {
         time: {
           bounds: "ticks",
         },
+        ticks: {
+          maxTicksLimit: 20,
+        },
       }],
       yAxes: [{
         scaleLabel: {
